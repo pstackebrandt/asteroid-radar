@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
+
         <variable
             name="viewModel"
             type="com.udacity.asteroidradar.main.MainViewModel" />
@@ -14,6 +15,7 @@
         android:layout_height="match_parent"
         android:background="@color/app_background">
 
+        <!-- Contains NASA Picture of the day -->
         <FrameLayout
             android:id="@+id/activity_main_image_of_the_day_layout"
             android:layout_width="match_parent"
@@ -28,7 +30,7 @@
                 android:layout_height="match_parent"
                 android:adjustViewBounds="true"
                 android:scaleType="centerCrop"
-                app:srcCompat="@drawable/placeholder_picture_of_day"/>
+                app:srcCompat="@drawable/placeholder_picture_of_day" />
 
             <TextView
                 android:id="@+id/textView"
@@ -43,6 +45,7 @@
                 android:text="@string/image_of_the_day" />
         </FrameLayout>
 
+        <!-- Contains asteroid list -->
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/asteroid_recycler"
             android:layout_width="0dp"
@@ -54,6 +57,8 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/activity_main_image_of_the_day_layout"
             app:layout_constraintVertical_bias="0.0" />
+
+<!--        app:listData="@{viewModel.asteroids}"-->
 
         <ProgressBar
             android:id="@+id/status_loading_wheel"
