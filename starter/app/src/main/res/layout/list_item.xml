@@ -35,6 +35,9 @@
         app:layout_constraintBottom_toTopOf="@id/close_approach_date_textview"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+
+        android:background="@android:color/darker_gray"
+        android:textColor="@android:color/white"
         />
 
     <TextView
@@ -54,6 +57,9 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintVertical_chainStyle="packed"
         android:gravity="center_vertical"
+
+        android:background="@android:color/holo_blue_dark"
+        android:textColor="@android:color/white"
         />
 
 <!--        android:textAppearance="?textAppearanceHeadline6"-->

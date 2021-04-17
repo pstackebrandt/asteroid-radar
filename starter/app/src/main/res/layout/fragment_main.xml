@@ -27,15 +27,19 @@
 
             <ImageView
                 android:id="@+id/activity_main_image_of_the_day"
+                app:srcCompat="@drawable/placeholder_picture_of_day"
+                android:contentDescription="@string/image_of_the_day_view_description"
+
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+
                 android:adjustViewBounds="true"
                 android:scaleType="centerCrop"
-                app:srcCompat="@drawable/placeholder_picture_of_day"
-                android:contentDescription="NASA's image of the day" />
+                />
 
             <TextView
                 android:id="@+id/textView"
+                android:text="@string/image_of_the_day"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="16dp"
@@ -44,7 +48,7 @@
                 android:textSize="20sp"
                 android:layout_gravity="bottom"
                 android:background="#55010613"
-                android:text="@string/image_of_the_day" />
+                />
         </FrameLayout>
 
         <!-- Contains asteroid list -->
