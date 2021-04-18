@@ -53,10 +53,10 @@
 
         <!-- Contains asteroid list -->
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/asteroid_recycler"
+            android:id="@+id/asteroids_recyclerview"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             tools:listitem="@layout/asteroid_list_item"
-            app:listData="@{viewModel.asteroids}"
+            app:asteroidList="@{viewModel.asteroids}"
 
             android:layout_width="0dp"
             android:layout_height="0dp"
