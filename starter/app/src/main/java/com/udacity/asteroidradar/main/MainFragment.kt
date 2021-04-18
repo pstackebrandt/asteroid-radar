@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.udacity.asteroidradar.R
 import com.udacity.asteroidradar.databinding.FragmentMainBinding
+import timber.log.Timber
 
 /**
  * This fragment shows the list of current asteroids and picture of the day.
@@ -28,6 +29,7 @@ class MainFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+
         val binding = FragmentMainBinding.inflate(inflater)
 
         // Allows Data Binding to Observe LiveData with the lifecycle of this Fragment
@@ -36,7 +38,13 @@ class MainFragment : Fragment() {
         // Giving the binding access to the MainViewModel
         binding.viewModel = viewModel
 
-        // todo bind to photoAdapter?
+        val adapter = AsteroidListAdapter(AsteroidClickListener { asteroid ->
+            // todo start navigation to detail screen
+            Timber.i("asteroid clicked: ${asteroid.codename}")
+        })
+
+        // Sets the adapter of the RecyclerView
+        binding.asteroidsRecyclerview.adapter = adapter
 
         // todo observe viewModel.navigateToSelectedProperty
         // navigate to detail screen
