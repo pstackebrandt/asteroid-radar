@@ -12,11 +12,11 @@
         <variable
             name="asteroid"
             type="com.udacity.asteroidradar.Asteroid" />
-        <!-- Currently we tell type but not source of data -->
 
-        <!--        <variable-->
-        <!--            name="clickListener"-->
-        <!--            type="com.example.android.gdgfinder.search.GdgClickListener"/>-->
+        <!-- Currently we tell type but not source of data -->
+        <variable
+            name="clickListener"
+            type="com.udacity.asteroidradar.main.AsteroidClickListener" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
