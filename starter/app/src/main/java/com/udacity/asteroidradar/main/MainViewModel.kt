@@ -18,14 +18,14 @@ class MainViewModel : ViewModel() {
     val asteroids: LiveData<List<Asteroid>>
         get() = _asteroids
 
-    init {
-        val asteroids = mutableListOf<Asteroid>()
-        _asteroids.value = asteroids
-    }
-
 //    init {
-//        addExampleData()
+//        val asteroids = mutableListOf<Asteroid>()
+//        _asteroids.value = asteroids
 //    }
+
+    init {
+        addExampleData()
+    }
 
     private fun addExampleData() {
         val asteroids = mutableListOf<Asteroid>()
@@ -44,27 +44,27 @@ class MainViewModel : ViewModel() {
 
         asteroids.add(
             Asteroid(
-                2465632,
-                "465633 (2009 JR5)",
+                3426410,
+                "(2008 QV11)",
                 "2015-09-08\n",
-                20.36,
-                0.5035469604,
-                0.3027478814,
-                0.3027478814,
-                true
+                21.0,
+                0.3750075218,
+                19.7498082027,
+                0.2591243925,
+                false
             )
         )
 
         asteroids.add(
             Asteroid(
-                2465631,
-                "465633 (2009 JR5)",
+                3553060,
+                "(2010 XT10)",
                 "2015-09-08\n",
-                20.36,
-                0.5035469604,
-                0.3027478814,
-                0.3027478814,
-                true
+                26.5,
+                0.0297879063,
+                19.1530348886,
+                0.4917435147,
+                false
             )
         )
 
