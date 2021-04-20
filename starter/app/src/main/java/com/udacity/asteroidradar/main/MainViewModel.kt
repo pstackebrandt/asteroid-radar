@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.udacity.asteroidradar.Asteroid
+import timber.log.Timber
 
 /**
  * The [ViewModel] that is attached to the [MainFragment].
@@ -18,10 +19,15 @@ class MainViewModel : ViewModel() {
     val asteroids: LiveData<List<Asteroid>>
         get() = _asteroids
 
-//    init {
-//        val asteroids = mutableListOf<Asteroid>()
-//        _asteroids.value = asteroids
-//    }
+    // Internally, we use a MutableLiveData to handle navigation to the selected asteroid
+    private val _navigateToSelectedAsteroid = MutableLiveData<Asteroid>()
+
+    // The external immutable LiveData for the navigation asteroid
+    /** If navigation is required, this property contains the [Asteroid] to which we want to navigate.
+     * Tells thereby whether navigation is required. */
+    val navigateToSelectedAsteroid: LiveData<Asteroid>
+        get() = _navigateToSelectedAsteroid
+
 
     init {
         addExampleData()
@@ -29,6 +35,7 @@ class MainViewModel : ViewModel() {
 
     private fun addExampleData() {
         val asteroids = mutableListOf<Asteroid>()
+
         asteroids.add(
             Asteroid(
                 2465633,
@@ -69,5 +76,22 @@ class MainViewModel : ViewModel() {
         )
 
         _asteroids.value = asteroids
+
+        Timber.i("Dummy asteroids added.")
+    }
+
+    /**
+     * When the asteroid entry is clicked, set the [_navigateToSelectedAsteroid] [MutableLiveData].
+     * @param asteroid The [Asteroid] that was clicked on.
+     */
+    fun displayAsteroidDetails(asteroid: Asteroid) {
+        _navigateToSelectedAsteroid.value = asteroid
+    }
+
+    /**
+     * After the navigation has taken place, make sure [navigateToSelectedAsteroid] is set to null
+     */
+    fun navigateToAsteroidDetailsComplete() {
+        _navigateToSelectedAsteroid.value = null
     }
 }

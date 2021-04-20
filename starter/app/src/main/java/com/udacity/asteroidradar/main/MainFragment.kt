@@ -3,7 +3,9 @@ package com.udacity.asteroidradar.main
 import android.os.Bundle
 import android.view.*
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import com.udacity.asteroidradar.R
 import com.udacity.asteroidradar.databinding.FragmentMainBinding
 import timber.log.Timber
@@ -29,6 +31,7 @@ class MainFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        Timber.i("onCreateView start")
 
         val binding = FragmentMainBinding.inflate(inflater)
 
@@ -38,24 +41,32 @@ class MainFragment : Fragment() {
         // Giving the binding access to the MainViewModel
         binding.viewModel = viewModel
 
-        val adapter = AsteroidListAdapter(AsteroidClickListener { asteroid ->
-            // todo start navigation to detail screen
-            Timber.i("asteroid clicked: ${asteroid.codename}")
+        // Sets the adapter of the RecyclerView
+        binding.asteroidsRecyclerview.adapter = AsteroidListAdapter(
+            AsteroidListAdapter.OnClickListener { asteroid ->
+                // todo start navigation to detail screen
+                Timber.i("asteroid clicked: ${asteroid.codename}")
+                viewModel.displayAsteroidDetails(asteroid)
+            })
+
+        /**
+        * Navigate to detail screen.
+        * Observe the navigateToSelected.. LiveData and navigate when it isn't null.
+        * After navigating, call displayPropertyDetailsComplete() so that the ViewModel is ready
+        * for another navigation event.
+        */
+        viewModel.navigateToSelectedAsteroid.observe(viewLifecycleOwner, Observer {
+            Timber.i("observing navigateToSelectedAsteroid")
+            if (null != it) {
+                // Must find the NavController from the Fragment
+                this.findNavController().navigate(MainFragmentDirections.actionShowDetail(it))
+                // Tell the ViewModel we've made the navigate call to prevent multiple navigation
+                viewModel.navigateToAsteroidDetailsComplete()
+            }
         })
 
-        // Sets the adapter of the RecyclerView
-        binding.asteroidsRecyclerview.adapter = adapter
-
-        // todo observe viewModel.navigateToSelectedProperty
-        // navigate to detail screen
-        // Observe the navigateToSelectedProperty LiveData and Navigate when it isn't null
-        // After navigating, call displayPropertyDetailsComplete() so that the ViewModel is ready
-        // for another navigation event.
-
-        // todo Sets the adapter of the photosGrid RecyclerView with clickHandler lambda that
-        // tells the viewModel when our property is clicked
-
         setHasOptionsMenu(true)
+        Timber.i("onCreateView end")
         return binding.root
     }
 

@@ -5,15 +5,16 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.udacity.asteroidradar.databinding.AsteroidListItemBinding
 import com.udacity.asteroidradar.Asteroid
+import com.udacity.asteroidradar.databinding.AsteroidListItemBinding
+import timber.log.Timber
 
 
 /**
  * Adapter for AsteroidList RecyclerView
  * Adapter with ViewHolder and Diff
  */
-class AsteroidListAdapter(private val clickListener: AsteroidClickListener) :
+class AsteroidListAdapter(val onClickListener: OnClickListener) :
     ListAdapter<Asteroid, AsteroidListAdapter.AsteroidListViewHolder>(DiffCallback) {
 
     /** Contains functionality to check whether chapters are same or have same content.  */
@@ -34,13 +35,13 @@ class AsteroidListAdapter(private val clickListener: AsteroidClickListener) :
     class AsteroidListViewHolder(private var binding: AsteroidListItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        /** Bind to [Asteroid] and [AsteroidClickListener]. */
-        fun bind(listener: AsteroidClickListener, asteroid: Asteroid) {
+        /** Bind ViewHolder to [Asteroid] and [OnClickListener]. */
+        fun bind(listener: OnClickListener, asteroid: Asteroid) {
             binding.asteroid = asteroid
             binding.clickListener = listener
 
             // This is important, because it forces the data binding to execute immediately,
-            // which allows the RecyclerView to make the correct view size measurements
+            // which allows the RecyclerView to make the correct view size measurements.
             binding.executePendingBindings()
         }
 
@@ -61,9 +62,12 @@ class AsteroidListAdapter(private val clickListener: AsteroidClickListener) :
      * A ViewHolder holds a view for the [RecyclerView] as well as providing additional information
      * to the RecyclerView such as where on the screen it was last drawn during scrolling.
      */
-    override fun onCreateViewHolder(parent: ViewGroup,
-                                    viewType: Int):
+    override fun onCreateViewHolder(
+        parent: ViewGroup,
+        viewType: Int
+    ):
             AsteroidListViewHolder {
+        Timber.i("adapter: onCreateViewHolder")
         return AsteroidListViewHolder.from(parent)
     }
 
@@ -72,12 +76,34 @@ class AsteroidListAdapter(private val clickListener: AsteroidClickListener) :
      *
      * The ViewHolder passed may be recycled, so make sure that this sets any properties that
      * may have been set previously.
+     *
+     * Called by RecyclerView to display the data at the specified position. This method should
+     * update the contents of the ViewHolder.itemView to reflect the item at the given
+     * position.
+     *
+     * Note that unlike [android.widget.ListView], RecyclerView will not call this method
+     * again if the position of the item changes in the data set unless the item itself is
+     * invalidated or the new position cannot be determined. For this reason, you should only
+     * use the `position` parameter while acquiring the related data item inside
+     * this method and should not keep a copy of it. If you need the position of an item later
+     * on (e.g. in a click listener), use ViewHolder.getBindingAdapterPosition which
+     * will have the updated adapter position.
+     * (Replaces the contents of a view (invoked by the layout manager))
      */
-    override fun onBindViewHolder(holder: AsteroidListViewHolder, position: Int) {
-        holder.bind(clickListener, getItem(position))
+    override fun onBindViewHolder(holder: AsteroidListViewHolder,
+                                  position: Int) {
+        Timber.i("onBindViewHolder")
+        holder.bind(onClickListener, getItem(position))
+    }
+
+    /**
+     * Custom listener that handles clicks on [RecyclerView] items.  Passes the [Asteroid]
+     * associated with the current item to the [onClick] function.
+     * @param clickListener lambda that will be called with the current [Asteroid]
+     */
+    class OnClickListener(val clickListener: (asteroid: Asteroid) -> Unit) {
+        fun onClick(asteroid: Asteroid) = clickListener(asteroid)
     }
 }
 
-class AsteroidClickListener(val clickListener: (asteroid: Asteroid) -> Unit) {
-    fun onClick(asteroid: Asteroid) = clickListener(asteroid)
-}
+

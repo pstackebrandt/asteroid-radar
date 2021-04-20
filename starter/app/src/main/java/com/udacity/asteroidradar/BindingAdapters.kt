@@ -63,6 +63,6 @@ fun bindRecyclerView(
     val adapter = recyclerView.adapter as AsteroidListAdapter
     adapter.submitList(asteroids) {
         // scroll the list to the top after the diffs are calculated and posted
-        // recyclerView.scrollToPosition(0)
+         recyclerView.scrollToPosition(0)
     }
 }

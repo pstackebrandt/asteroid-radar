@@ -16,14 +16,14 @@
         <!-- Currently we tell type but not source of data -->
         <variable
             name="clickListener"
-            type="com.udacity.asteroidradar.main.AsteroidClickListener" />
+            type="com.udacity.asteroidradar.main.AsteroidListAdapter.OnClickListener" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:onClick="@{() -> clickListener.onClick(asteroid)}"
         android:layout_width="match_parent"
         android:layout_height="160dp">
 
-        <!--    android:onClick="@{() -> clickListener.onClick(chapter)}"-->
         <TextView
             android:id="@+id/codename_textview"
             android:text="@{asteroid.codename}"
