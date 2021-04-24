@@ -1,15 +1,30 @@
 package com.udacity.asteroidradar.main
 
+import com.udacity.asteroidradar.network.AsteroidsApiFilter
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.udacity.asteroidradar.Asteroid
+import com.udacity.asteroidradar.api.parseAsteroids
+import com.udacity.asteroidradar.network.AsteroidApiService
+import kotlinx.coroutines.launch
 import timber.log.Timber
+
+enum class AsteroidsApiStatus { LOADING, ERROR, DONE }
 
 /**
  * The [ViewModel] that is attached to the [MainFragment].
  */
 class MainViewModel : ViewModel() {
+
+    /** The internal MutableLiveData string that stores the status of
+    the most recent request.*/
+    private val _status = MutableLiveData<AsteroidsApiStatus>()
+
+    /* The external immutable LiveData for the status string */
+    val status: LiveData<AsteroidsApiStatus>
+        get() = _status
 
     // Internally, we use a MutableLiveData, because we will be updating the List of Asteroids
     // with new values
@@ -30,7 +45,39 @@ class MainViewModel : ViewModel() {
 
 
     init {
-        addExampleData()
+        //addExampleData()
+        getAsteroids()
+        // getAsteroids(AsteroidsApiFilter.VIEW_TODAY_ASTEROIDS)
+    }
+
+    /**
+     * Gets filtered asteroids information from the Asteroids API Retrofit service and
+     * updates the [Asteroid] [List] and [AsteroidsApiStatus] [LiveData]. The Retrofit service
+     * returns a coroutine Deferred, which we await to get the result of the transaction.
+     * @param filter the [AsteroidsApiFilter] that is sent as part of the web server request
+     */
+//    private fun getAsteroids(filter: AsteroidsApiFilter) {
+    private fun getAsteroids() {
+        viewModelScope.launch {
+            _status.value = AsteroidsApiStatus.LOADING
+
+            try {
+                Timber.i("getAsteroids(): before service call ")
+                val asteroidsFullData = AsteroidApiService.AsteroidsApi.retrofitService.getAsteroids()
+                        as Map<*,*>
+                val asteroids = parseAsteroids(asteroidsFullData)
+                Timber.i("getAsteroids(): asteroids parsed")
+                _asteroids.value = asteroids
+
+                _status.value = AsteroidsApiStatus.DONE
+            } catch (e: Exception) {
+
+                Timber.i("getAsteroids(): exception ${e.message}")
+                Timber.i("getAsteroids(): exception ${e.stackTrace}")
+                _status.value = AsteroidsApiStatus.ERROR
+                _asteroids.value = ArrayList()
+            }
+        }
     }
 
     private fun addExampleData() {
