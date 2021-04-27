@@ -44,8 +44,8 @@ class MainFragment : Fragment() {
         // Sets the adapter of the RecyclerView
         binding.asteroidsRecyclerview.adapter = AsteroidListAdapter(
             AsteroidListAdapter.OnClickListener { asteroid ->
-                // todo start navigation to detail screen
                 Timber.i("asteroid clicked: ${asteroid.codename}")
+                // start navigation to detail screen
                 viewModel.displayAsteroidDetails(asteroid)
             })
 
