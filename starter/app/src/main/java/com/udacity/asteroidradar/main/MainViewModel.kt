@@ -1,13 +1,11 @@
 package com.udacity.asteroidradar.main
 
-import com.udacity.asteroidradar.network.AsteroidsApiFilter
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import android.app.Application
+import androidx.lifecycle.*
 import com.udacity.asteroidradar.Asteroid
-import com.udacity.asteroidradar.api.parseAsteroids
-import com.udacity.asteroidradar.network.AsteroidApiService
+import com.udacity.asteroidradar.database.getDatabase
+import com.udacity.asteroidradar.network.AsteroidsApiFilter
+import com.udacity.asteroidradar.repository.AsteroidsRepository
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
@@ -16,23 +14,15 @@ enum class AsteroidsApiStatus { LOADING, ERROR, DONE }
 /**
  * The [ViewModel] that is attached to the [MainFragment].
  */
-class MainViewModel : ViewModel() {
-
-    /** The internal MutableLiveData string that stores the status of
-    the most recent request.*/
-    private val _status = MutableLiveData<AsteroidsApiStatus>()
-
-    /* The external immutable LiveData for the status string */
-    val status: LiveData<AsteroidsApiStatus>
-        get() = _status
+class MainViewModel(application: Application) : ViewModel() {
 
     // Internally, we use a MutableLiveData, because we will be updating the List of Asteroids
     // with new values
-    private val _asteroids = MutableLiveData<List<Asteroid>>()
+    // private val _asteroids = MutableLiveData<List<Asteroid>>()
 
     // The external LiveData interface to the property is immutable, so only this class can modify
-    val asteroids: LiveData<List<Asteroid>>
-        get() = _asteroids
+    // val asteroids: LiveData<List<Asteroid>>
+    // get() = _asteroids
 
     // Internally, we use a MutableLiveData to handle navigation to the selected asteroid
     private val _navigateToSelectedAsteroid = MutableLiveData<Asteroid>()
@@ -43,6 +33,10 @@ class MainViewModel : ViewModel() {
     val navigateToSelectedAsteroid: LiveData<Asteroid>
         get() = _navigateToSelectedAsteroid
 
+    private val database = getDatabase(application)
+
+    private val asteroidsRepository = AsteroidsRepository(database)
+
 
     init {
         //addExampleData()
@@ -50,32 +44,23 @@ class MainViewModel : ViewModel() {
         // getAsteroids(AsteroidsApiFilter.VIEW_TODAY_ASTEROIDS)
     }
 
+    val asteroids = asteroidsRepository.asteroids
+
     /**
-     * Gets filtered asteroids information from the Asteroids API Retrofit service and
-     * updates the [Asteroid] [List] and [AsteroidsApiStatus] [LiveData]. The Retrofit service
-     * returns a coroutine Deferred, which we await to get the result of the transaction.
+     * Gets (filtered) asteroids information from the Asteroids API Retrofit service and
+     * updates the [Asteroid] [List] and [AsteroidsApiStatus] [LiveData].
      * @param filter the [AsteroidsApiFilter] that is sent as part of the web server request
      */
-//    private fun getAsteroids(filter: AsteroidsApiFilter) {
+//    private fun getAsteroids(filter: AsteroidsApiFilter) { // todo use filter
     private fun getAsteroids() {
         viewModelScope.launch {
-            _status.value = AsteroidsApiStatus.LOADING
-
             try {
                 Timber.i("getAsteroids(): before service call ")
-                val asteroidsFullData = AsteroidApiService.AsteroidsApi.retrofitService.getAsteroids()
-                        as Map<*,*>
-                val asteroids = parseAsteroids(asteroidsFullData)
-                Timber.i("getAsteroids(): asteroids parsed")
-                _asteroids.value = asteroids
-
-                _status.value = AsteroidsApiStatus.DONE
+                asteroidsRepository.refreshAsteroids()
+                Timber.i("getAsteroids(): after service call ")
             } catch (e: Exception) {
-
                 Timber.i("getAsteroids(): exception ${e.message}")
                 Timber.i("getAsteroids(): exception ${e.stackTrace}")
-                _status.value = AsteroidsApiStatus.ERROR
-                _asteroids.value = ArrayList()
             }
         }
     }
@@ -122,8 +107,6 @@ class MainViewModel : ViewModel() {
             )
         )
 
-        _asteroids.value = asteroids
-
         Timber.i("Dummy asteroids added.")
     }
 
@@ -140,5 +123,18 @@ class MainViewModel : ViewModel() {
      */
     fun navigateToAsteroidDetailsComplete() {
         _navigateToSelectedAsteroid.value = null
+    }
+
+    /**
+     * Factory for constructing MainViewModel with parameter
+     */
+    class Factory(val app: Application) : ViewModelProvider.Factory {
+        override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+            if (modelClass.isAssignableFrom(MainViewModel::class.java)) {
+                @Suppress("UNCHECKED_CAST")
+                return MainViewModel(app) as T
+            }
+            throw IllegalArgumentException("Unable to construct viewmodel")
+        }
     }
 }
