@@ -53,7 +53,7 @@ interface AsteroidApiService {
         @Query("start_date")
         startDate: String = "2021-04-17",
         @Query("end_date")
-        endDate: String = "2021-04-18",
+        endDate: String = "2021-04-20",
         @Query("api_key")
         key: String = API_KEY
     )

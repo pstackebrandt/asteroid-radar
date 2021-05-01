@@ -1,17 +1,17 @@
 package com.udacity.asteroidradar.repository
 
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import com.udacity.asteroidradar.Asteroid
+import com.udacity.asteroidradar.DateUtils
 import com.udacity.asteroidradar.api.parseAsteroids
 import com.udacity.asteroidradar.database.AsteroidsDatabase
 import com.udacity.asteroidradar.database.asDomainModel
-import com.udacity.asteroidradar.main.AsteroidsApiStatus
 import com.udacity.asteroidradar.network.asDatabaseModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import java.util.*
 import com.udacity.asteroidradar.network.AsteroidApiService.AsteroidsApi.retrofitService as AsteroidService
 
 /**
@@ -28,15 +28,19 @@ class AsteroidsRepository(private val database: AsteroidsDatabase) {
 
     /** The internal MutableLiveData string that stores the status of
     the most recent request.*/
-    private val _status = MutableLiveData<AsteroidsApiStatus>()
+//    private val _status = MutableLiveData<AsteroidsApiStatus>()
+
+    val date: Date = DateUtils.getDateFromString("2021-04-17")
 
     /**
      * Get list of asteroids.
      * We return domain objects, which are agnostic of Network or Database.
      */
     val asteroids: LiveData<List<Asteroid>> =
-        Transformations.map(database.asteroidDao.getAsteroids()) {
+        Transformations.map(database.asteroidDao.getAsteroids(date)) {
             it.asDomainModel()
+//            Transformations.map(database.asteroidDao.getAsteroids()) {
+//            it.asDomainModel()
         }
 
     /**

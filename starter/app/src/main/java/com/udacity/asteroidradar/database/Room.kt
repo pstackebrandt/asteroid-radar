@@ -3,6 +3,7 @@ package com.udacity.asteroidradar.database
 import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.room.*
+import java.util.*
 
 /** Contains the database */
 private lateinit var INSTANCE: AsteroidsDatabase
@@ -17,8 +18,8 @@ interface AsteroidDao {
     @Query("select * from DatabaseAsteroid")
     fun getAsteroids(): LiveData<List<DatabaseAsteroid>>
 
-//    @Query("select * from DatabaseAsteroid WHERE closeApproachDate == :targetDate ")
-//    fun getAsteroids(targetDate: Date): LiveData<List<DatabaseAsteroid>>
+    @Query("select * from DatabaseAsteroid WHERE closeApproachDate == :targetDate ")
+    fun getAsteroids(targetDate: Date): LiveData<List<DatabaseAsteroid>>
 
 //    @Query("select * from DatabaseAsteroid WHERE closeApproachDate >= :startDate AND closeApproachDate <= :endDate")
 //    fun getAsteroids(startDate: Date, endDate: Date): LiveData<List<DatabaseAsteroid>>

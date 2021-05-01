@@ -137,10 +137,7 @@ private fun parseAsteroid(asteroid: Map<*, *>): Asteroid {
     val isPotentiallyHazardous = asteroid["is_potentially_hazardous_asteroid"]
             as Boolean
 
-    val formatter = SimpleDateFormat("yyyy-MM-dd", Locale.US)
-    val date: Date = formatter.parse(closeApproachDate)
-        ?: throw Exception(
-            "parse of closeApproachDate $closeApproachDate for asteroid with id $id leads to null")
+    val date: Date = getDateFromString(closeApproachDate, id)
 
     return Asteroid(
         id = id,
@@ -152,6 +149,15 @@ private fun parseAsteroid(asteroid: Map<*, *>): Asteroid {
         distanceFromEarth = distanceFromEarth,
         isPotentiallyHazardous = isPotentiallyHazardous
     )
+}
+
+private fun getDateFromString(closeApproachDate: String, id: Long): Date {
+    val formatter = SimpleDateFormat("yyyy-MM-dd", Locale.US)
+    val date: Date = formatter.parse(closeApproachDate)
+        ?: throw Exception(
+            "parse of closeApproachDate $closeApproachDate for asteroid with id $id leads to null"
+        )
+    return date
 }
 
 private fun getNearEarthObjects(asteroidsFullData: Map<*, *>): Map<*, *> {
