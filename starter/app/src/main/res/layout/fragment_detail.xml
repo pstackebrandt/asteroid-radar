@@ -25,7 +25,8 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:srcCompat="@drawable/asteroid_safe" />
+            tools:srcCompat="@drawable/asteroid_safe"
+            android:contentDescription="@string/activity_main_image_of_the_day__content_description" />
 
         <ScrollView
             android:layout_width="0dp"
@@ -57,9 +58,10 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="4dp"
-                        android:text="@{asteroid.closeApproachDate}"
+                        android:text="@{asteroid.closeApproachDate.toLocaleString()}"
                         android:textColor="@color/default_text_color"
                         tools:text="2020-02-01" />
+                    <!-- todo print date without time -->
                 </LinearLayout>
 
                 <LinearLayout
@@ -97,7 +99,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:padding="16dp"
-                        app:srcCompat="@drawable/ic_help_circle" />
+                        app:srcCompat="@drawable/ic_help_circle"
+                        android:contentDescription="@string/help_button__content_description" />
 
                 </LinearLayout>
 

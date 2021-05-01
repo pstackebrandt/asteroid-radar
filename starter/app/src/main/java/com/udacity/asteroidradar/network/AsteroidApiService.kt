@@ -15,8 +15,8 @@ private const val API_KEY = Constants.API_KEY
 enum class AsteroidsApiFilter(val value: String) {
     VIEW_WEEK_ASTEROIDS("view.week.asteroids"),
     VIEW_TODAY_ASTEROIDS
-        (" view.today.asteroids"),
-    VIEW_SAVED_ASTEROIDS(" view.saved.asteroids")
+        ("view.today.asteroids"),
+    VIEW_SAVED_ASTEROIDS("view.saved.asteroids")
 }
 
 /**

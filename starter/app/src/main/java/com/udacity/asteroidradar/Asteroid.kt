@@ -1,8 +1,9 @@
 package com.udacity.asteroidradar
 
 import android.os.Parcelable
-import androidx.lifecycle.LiveData
 import kotlinx.android.parcel.Parcelize
+import java.util.*
+
 
 /**
  * This data class defines an asteroid which includes the codename and it's hazardousness.
@@ -16,7 +17,7 @@ import kotlinx.android.parcel.Parcelize
 @Parcelize
 data class Asteroid(val id: Long,
                     val codename: String,
-                    val closeApproachDate: String,
+                    val closeApproachDate: Date,
                     val absoluteMagnitude: Double,
                     val estimatedDiameter: Double,
                     val relativeVelocity: Double,

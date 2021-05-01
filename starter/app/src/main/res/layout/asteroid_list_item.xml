@@ -44,7 +44,7 @@
 
         <TextView
             android:id="@+id/close_approach_date_textview"
-            android:text="@{asteroid.closeApproachDate}"
+            android:text="@{asteroid.closeApproachDate.toLocaleString()}"
             tools:text="2020-02-08"
 
             android:layout_width="0dp"
@@ -62,6 +62,7 @@
 
             android:background="@android:color/holo_blue_dark"
             android:textColor="@android:color/white" />
+        <!-- todo print date without time -->
 
         <!--        android:textAppearance="?textAppearanceHeadline6"-->
 

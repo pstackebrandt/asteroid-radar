@@ -13,8 +13,15 @@ private lateinit var INSTANCE: AsteroidsDatabase
 @Dao
 interface AsteroidDao {
     /** get all asteroids from database */
+
     @Query("select * from DatabaseAsteroid")
     fun getAsteroids(): LiveData<List<DatabaseAsteroid>>
+
+//    @Query("select * from DatabaseAsteroid WHERE closeApproachDate == :targetDate ")
+//    fun getAsteroids(targetDate: Date): LiveData<List<DatabaseAsteroid>>
+
+//    @Query("select * from DatabaseAsteroid WHERE closeApproachDate >= :startDate AND closeApproachDate <= :endDate")
+//    fun getAsteroids(startDate: Date, endDate: Date): LiveData<List<DatabaseAsteroid>>
 
     /** Insert asteroids into database. Replace asteroids,
      * that already exist. */
@@ -24,6 +31,7 @@ interface AsteroidDao {
 
 /** Describes the database */
 @Database(entities = [DatabaseAsteroid::class], version = 1)
+@TypeConverters(Converters::class)
 abstract class AsteroidsDatabase : RoomDatabase() {
     abstract val asteroidDao: AsteroidDao
 }
@@ -36,7 +44,8 @@ fun getDatabase(context: Context): AsteroidsDatabase {
                 context.applicationContext,
                 AsteroidsDatabase::class.java,
                 "asteroids"
-            ).build()
+            )
+                .build()
         }
     }
     return INSTANCE
