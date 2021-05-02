@@ -4,13 +4,15 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.Transformations
 import com.udacity.asteroidradar.Asteroid
 import com.udacity.asteroidradar.DateUtils
+import com.udacity.asteroidradar.DateUtils.Companion.getCurrentDateTime
+import com.udacity.asteroidradar.DateUtils.Companion.toString
 import com.udacity.asteroidradar.api.parseAsteroids
 import com.udacity.asteroidradar.database.AsteroidsDatabase
 import com.udacity.asteroidradar.database.asDomainModel
 import com.udacity.asteroidradar.network.asDatabaseModel
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import timber.log.Timber
 import java.util.*
 import com.udacity.asteroidradar.network.AsteroidApiService.AsteroidsApi.retrofitService as AsteroidService
 
@@ -24,23 +26,23 @@ import com.udacity.asteroidradar.network.AsteroidApiService.AsteroidsApi.retrofi
  */
 class AsteroidsRepository(private val database: AsteroidsDatabase) {
 
-    private val applicationScope = CoroutineScope(Dispatchers.Default)
+    companion object {
+        const val ASTEROIDS_DATE_FORMAT = "yyyy-MM-dd"
+    }
 
     /** The internal MutableLiveData string that stores the status of
     the most recent request.*/
 //    private val _status = MutableLiveData<AsteroidsApiStatus>()
 
-    val date: Date = DateUtils.getDateFromString("2021-04-17")
+    val date: Date = Date()
 
     /**
      * Get list of asteroids.
      * We return domain objects, which are agnostic of Network or Database.
      */
     val asteroids: LiveData<List<Asteroid>> =
-        Transformations.map(database.asteroidDao.getAsteroids(date)) {
+        Transformations.map(database.asteroidDao.getAsteroids()) {
             it.asDomainModel()
-//            Transformations.map(database.asteroidDao.getAsteroids()) {
-//            it.asDomainModel()
         }
 
     /**
@@ -53,8 +55,14 @@ class AsteroidsRepository(private val database: AsteroidsDatabase) {
      * To actually load the asteroids for use, observe asteroids.
      */
     suspend fun refreshAsteroids() {
+        val currentDate = getCurrentDateTime()
+        val endDate: String =
+            DateUtils.getDate6DaysLater(currentDate).toString(ASTEROIDS_DATE_FORMAT)
+        val startDate: String = currentDate.toString(ASTEROIDS_DATE_FORMAT)
+        Timber.i("refreshAsteroids() before server call. startDate: $startDate, endDate: $endDate")
+
         withContext(Dispatchers.IO) {
-            val asteroidsFullData = AsteroidService.getAsteroids()
+            val asteroidsFullData = AsteroidService.getAsteroids(startDate, endDate)
                     as Map<*, *>
             val asteroids: List<Asteroid> = parseAsteroids(asteroidsFullData)
 

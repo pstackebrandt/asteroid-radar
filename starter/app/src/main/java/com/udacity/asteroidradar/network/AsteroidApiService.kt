@@ -11,6 +11,7 @@ import retrofit2.http.Query
 
 private const val BASE_URL = Constants.BASE_URL
 private const val API_KEY = Constants.API_KEY
+private const val ASTEROIDS_API_DATE_FORMAT = "yyyy-MM-dd"
 
 enum class AsteroidsApiFilter(val value: String) {
     VIEW_WEEK_ASTEROIDS("view.week.asteroids"),
