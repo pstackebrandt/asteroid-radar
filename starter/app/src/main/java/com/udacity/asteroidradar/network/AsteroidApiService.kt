@@ -52,9 +52,9 @@ interface AsteroidApiService {
     @GET("neo/rest/v1/feed")
     suspend fun getAsteroids(
         @Query("start_date")
-        startDate: String = "2021-04-17",
+        startDate: String,
         @Query("end_date")
-        endDate: String = "2021-04-20",
+        endDate: String,
         @Query("api_key")
         key: String = API_KEY
     )

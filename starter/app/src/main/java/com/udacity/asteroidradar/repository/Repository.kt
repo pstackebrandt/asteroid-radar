@@ -32,18 +32,41 @@ class AsteroidsRepository(private val database: AsteroidsDatabase) {
 
     /** The internal MutableLiveData string that stores the status of
     the most recent request.*/
-//    private val _status = MutableLiveData<AsteroidsApiStatus>()
+    // private val _status = MutableLiveData<AsteroidsApiStatus>()
 
     val date: Date = Date()
 
+
+//    private var _asteroids: LiveData<List<Asteroid>> = MutableLiveData<List<Asteroid>>()
+//    val asteroids: LiveData<List<Asteroid>>
+//        get() = _asteroids
+
     /**
-     * Get list of asteroids.
+     * Get list of asteroids initially.
      * We return domain objects, which are agnostic of Network or Database.
      */
-    val asteroids: LiveData<List<Asteroid>> =
+    var asteroids: LiveData<List<Asteroid>> =
         Transformations.map(database.asteroidDao.getAsteroids()) {
             it.asDomainModel()
         }
+
+    /**
+     * Get list of asteroids. Set time span.
+     * We return domain objects, which are agnostic of Network or Database.
+     */
+    fun filterAsteroids(startDate: Date? = null, endDate: Date? = null) {
+        asteroids = if (startDate != null && endDate != null) {
+            Timber.i("filterAsteroids(): call database.asteroidDao.getAsteroids(startDate = $startDate, endDate = $endDate)")
+            Transformations.map(database.asteroidDao.getAsteroids(startDate, endDate)) {
+                it.asDomainModel()
+            }
+        } else {
+            Timber.i("filterAsteroids(): call database.asteroidDao.getAsteroids()")
+            Transformations.map(database.asteroidDao.getAsteroids()) {
+                it.asDomainModel()
+            }
+        }
+    }
 
     /**
      * Refresh the Asteroid data stored in the offline cache.

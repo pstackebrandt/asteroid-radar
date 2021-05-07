@@ -3,11 +3,13 @@ package com.udacity.asteroidradar.main
 import android.app.Application
 import androidx.lifecycle.*
 import com.udacity.asteroidradar.Asteroid
+import com.udacity.asteroidradar.DateUtils
 import com.udacity.asteroidradar.database.getDatabase
 import com.udacity.asteroidradar.network.AsteroidsApiFilter
 import com.udacity.asteroidradar.repository.AsteroidsRepository
 import kotlinx.coroutines.launch
 import timber.log.Timber
+import java.util.*
 
 enum class AsteroidsApiStatus { LOADING, ERROR, DONE }
 
@@ -34,17 +36,33 @@ class MainViewModel(application: Application) : ViewModel() {
         get() = _navigateToSelectedAsteroid
 
     private val database = getDatabase(application)
-
     private val asteroidsRepository = AsteroidsRepository(database)
 
-
     init {
-        //addExampleData()
-        getAsteroids()
-        // getAsteroids(AsteroidsApiFilter.VIEW_TODAY_ASTEROIDS)
+        refreshAsteroids()
     }
 
     val asteroids = asteroidsRepository.asteroids
+
+    fun filterAsteroids(filter: AsteroidsApiFilter) {
+        Timber.i("updateFilter(): VIEW_TODAY_ASTEROIDS: $filter")
+        when (filter) {
+            AsteroidsApiFilter.VIEW_TODAY_ASTEROIDS -> {
+                val date = Date()
+                asteroidsRepository.filterAsteroids(date, date)
+            }
+            AsteroidsApiFilter.VIEW_WEEK_ASTEROIDS -> {
+                val startDate = Date()
+                asteroidsRepository.filterAsteroids(
+                    startDate,
+                    DateUtils.getDate6DaysLater(startDate)
+                )
+            }
+            else -> {   // show all saved asteroids
+                asteroidsRepository.filterAsteroids()
+            }
+        }
+    }
 
     /**
      * Gets (filtered) asteroids information from the Asteroids API Retrofit service and
@@ -52,7 +70,7 @@ class MainViewModel(application: Application) : ViewModel() {
      * @param filter the [AsteroidsApiFilter] that is sent as part of the web server request
      */
 //    private fun getAsteroids(filter: AsteroidsApiFilter) { // todo use filter
-    private fun getAsteroids() {
+    private fun refreshAsteroids() {
         viewModelScope.launch {
             try {
                 Timber.i("getAsteroids(): before service call ")
@@ -79,6 +97,7 @@ class MainViewModel(application: Application) : ViewModel() {
     fun navigateToAsteroidDetailsComplete() {
         _navigateToSelectedAsteroid.value = null
     }
+
 
     /**
      * Factory for constructing MainViewModel with parameter

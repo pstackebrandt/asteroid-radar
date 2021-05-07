@@ -21,8 +21,8 @@ interface AsteroidDao {
     @Query("select * from DatabaseAsteroid WHERE closeApproachDate == :targetDate ")
     fun getAsteroids(targetDate: Date): LiveData<List<DatabaseAsteroid>>
 
-//    @Query("select * from DatabaseAsteroid WHERE closeApproachDate >= :startDate AND closeApproachDate <= :endDate")
-//    fun getAsteroids(startDate: Date, endDate: Date): LiveData<List<DatabaseAsteroid>>
+    @Query("select * from DatabaseAsteroid WHERE closeApproachDate >= :startDate AND closeApproachDate <= :endDate")
+    fun getAsteroids(startDate: Date, endDate: Date): LiveData<List<DatabaseAsteroid>>
 
     /** Insert asteroids into database. Replace asteroids,
      * that already exist. */

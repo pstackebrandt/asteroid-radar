@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.udacity.asteroidradar.R
 import com.udacity.asteroidradar.databinding.FragmentMainBinding
+import com.udacity.asteroidradar.network.AsteroidsApiFilter
 import timber.log.Timber
 
 /**
@@ -79,12 +80,28 @@ class MainFragment : Fragment() {
         return binding.root
     }
 
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.main_overflow_menu, menu)
+    override fun onCreateOptionsMenu(
+        menu: Menu,
+        inflater: MenuInflater
+    ) {
         super.onCreateOptionsMenu(menu, inflater)
+        inflater.inflate(R.menu.main_overflow_menu, menu)
     }
 
+    /**
+     * Updates the filter in the [MainViewModel] when the menu items are selected from the
+     * overflow menu.
+     */
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return true
+        Timber.i("onOptionsItemSelected(): MenuItem: ${item.itemId}")
+        viewModel.filterAsteroids( //call updateFilter on the view model
+            when (item.itemId) {
+                R.id.show_week_asteroids_menu -> AsteroidsApiFilter.VIEW_WEEK_ASTEROIDS
+                R.id.show_saved_asteroids_menu -> AsteroidsApiFilter.VIEW_SAVED_ASTEROIDS
+                else -> AsteroidsApiFilter.VIEW_TODAY_ASTEROIDS
+            }
+        )
+        return true // Because we've handled the menu item.
     }
+
 }
