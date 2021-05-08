@@ -15,14 +15,16 @@ private lateinit var INSTANCE: AsteroidsDatabase
 interface AsteroidDao {
     /** get all asteroids from database */
 
-    @Query("select * from DatabaseAsteroid")
-    fun getAsteroids(): LiveData<List<DatabaseAsteroid>>
+    @Query("select * from DatabaseAsteroid ORDER BY closeApproachDate DESC")
+    fun getAllAsteroids(): LiveData<List<DatabaseAsteroid>>
 
-    @Query("select * from DatabaseAsteroid WHERE closeApproachDate == :targetDate ")
-    fun getAsteroids(targetDate: Date): LiveData<List<DatabaseAsteroid>>
+//    @Query("select * from DatabaseAsteroid WHERE closeApproachDate == :targetDate ")
+//    fun getAsteroids(targetDate: Date): LiveData<List<DatabaseAsteroid>>
 
-    @Query("select * from DatabaseAsteroid WHERE closeApproachDate >= :startDate AND closeApproachDate <= :endDate")
-    fun getAsteroids(startDate: Date, endDate: Date): LiveData<List<DatabaseAsteroid>>
+    @Query(
+        "select * from DatabaseAsteroid WHERE closeApproachDate >= :startDate AND closeApproachDate <= :endDate ORDER BY closeApproachDate DESC"
+    )
+    fun getAsteroidsWithinTimeSpan(startDate: Date, endDate: Date): LiveData<List<DatabaseAsteroid>>
 
     /** Insert asteroids into database. Replace asteroids,
      * that already exist. */

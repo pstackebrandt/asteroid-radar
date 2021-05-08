@@ -46,7 +46,7 @@ class AsteroidsRepository(private val database: AsteroidsDatabase) {
      * We return domain objects, which are agnostic of Network or Database.
      */
     var asteroids: LiveData<List<Asteroid>> =
-        Transformations.map(database.asteroidDao.getAsteroids()) {
+        Transformations.map(database.asteroidDao.getAllAsteroids()) {
             it.asDomainModel()
         }
 
@@ -57,12 +57,12 @@ class AsteroidsRepository(private val database: AsteroidsDatabase) {
     fun filterAsteroids(startDate: Date? = null, endDate: Date? = null) {
         asteroids = if (startDate != null && endDate != null) {
             Timber.i("filterAsteroids(): call database.asteroidDao.getAsteroids(startDate = $startDate, endDate = $endDate)")
-            Transformations.map(database.asteroidDao.getAsteroids(startDate, endDate)) {
+            Transformations.map(database.asteroidDao.getAsteroidsWithinTimeSpan(startDate, endDate)) {
                 it.asDomainModel()
             }
         } else {
             Timber.i("filterAsteroids(): call database.asteroidDao.getAsteroids()")
-            Transformations.map(database.asteroidDao.getAsteroids()) {
+            Transformations.map(database.asteroidDao.getAllAsteroids()) {
                 it.asDomainModel()
             }
         }
