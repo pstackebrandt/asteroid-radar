@@ -70,39 +70,40 @@ private fun getNextSevenDaysFormattedDates(): ArrayList<String> {
  * So we work with common Map.
  * */
 fun parseAsteroids(asteroidsFullData: Map<*, *>): List<Asteroid> {
-
+    Timber.i("parseAsteroids() begin")
     val nearEarthObjects: Map<*, *>
     try {
         nearEarthObjects = getNearEarthObjects(asteroidsFullData)
         if (nearEarthObjects.isEmpty()) return emptyList()
     } catch (exc: ParseException) {
-        Timber.e("Parse error on parsing asteroids $exc.message")
+        Timber.e("parseAsteroids() Parse error on parsing asteroids $exc.message")
         return emptyList()
     }
 
-    val asteroidsOfFirstDay = nearEarthObjects.entries.toTypedArray()[0].value
-    // todo use data of all required days
-
     val domainAsteroids = mutableListOf<Asteroid>()
 
-    if (asteroidsOfFirstDay is ArrayList<*>) {
-        for (asteroid in asteroidsOfFirstDay) {
-            if (asteroid is Map<*, *>) {
+    for (asteroidsOfDayPair: Pair<*,*> in nearEarthObjects.toList()) {
+        val asteroidsOfDayList: ArrayList<*> = asteroidsOfDayPair.second as ArrayList<*>
 
-                val asteroidParseResult =
-                    try {
-                        parseAsteroid(asteroid)
-                    } catch (exc: ParseException) {
-                        Timber.e("Parse error on parsing single asteroid $exc.message")
+            for (asteroid in asteroidsOfDayList) {
+                if (asteroid is Map<*, *>) {
+                    val asteroidParseResult =
+                        try {
+                            parseAsteroid(asteroid)
+                        } catch (exc: ParseException) {
+                            Timber.e("parseAsteroids() Parse error on parsing single asteroid $exc.message")
+                        }
+
+                    if (asteroidParseResult is Asteroid) {
+                        domainAsteroids += asteroidParseResult
+                        Timber.i("Parsed asteroid: ${asteroidParseResult.codename} : ${asteroidParseResult.closeApproachDate}")
                     }
-
-                if (asteroidParseResult is Asteroid) {
-                    domainAsteroids += asteroidParseResult
                 }
             }
-        }
+
     }
 
+    Timber.i("parseAsteroids() end, count of asteroids = ${domainAsteroids.count()}, last date: ${domainAsteroids.last().closeApproachDate}")
     return domainAsteroids
 }
 
