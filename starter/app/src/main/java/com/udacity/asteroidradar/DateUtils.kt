@@ -52,6 +52,8 @@ class DateUtils {
          * @date ist the first day of this week. */
         fun getDate6DaysLater(date: Date) = addDays(date, 6)
 
+        fun getDateOfNextDay(date: Date) = addDays(date, 1)
+
         /**
          * inspired by https://stackoverflow.com/questions/1005523/how-to-add-one-day-to-a-date
          */
@@ -59,6 +61,18 @@ class DateUtils {
             val calendar = Calendar.getInstance()
             calendar.time = date
             calendar.add(Calendar.DATE, days) //minus number would decrement the days
+            return calendar.time
+        }
+
+        /**
+         * Get date. Hour of day, minute, second and millisecond are set to zero.
+         * */
+        fun getDateWithoutTime(): Date {
+            val calendar = Calendar.getInstance()
+            calendar[Calendar.HOUR_OF_DAY] = 0
+            calendar[Calendar.MINUTE] = 0
+            calendar[Calendar.SECOND] = 0
+            calendar[Calendar.MILLISECOND] = 0
             return calendar.time
         }
     }

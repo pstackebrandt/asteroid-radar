@@ -4,7 +4,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.Transformations
 import com.udacity.asteroidradar.Asteroid
 import com.udacity.asteroidradar.DateUtils
-import com.udacity.asteroidradar.DateUtils.Companion.getCurrentDateTime
 import com.udacity.asteroidradar.DateUtils.Companion.toString
 import com.udacity.asteroidradar.api.parseAsteroids
 import com.udacity.asteroidradar.database.AsteroidsDatabase
@@ -34,7 +33,7 @@ class AsteroidsRepository(private val database: AsteroidsDatabase) {
     the most recent request.*/
     // private val _status = MutableLiveData<AsteroidsApiStatus>()
 
-    val date: Date = Date()
+    val date: Date = DateUtils.getDateWithoutTime()
 
 
 //    private var _asteroids: LiveData<List<Asteroid>> = MutableLiveData<List<Asteroid>>()
@@ -46,6 +45,12 @@ class AsteroidsRepository(private val database: AsteroidsDatabase) {
      * We return domain objects, which are agnostic of Network or Database.
      */
     var asteroids: LiveData<List<Asteroid>> =
+//        // temp get data for 2 days only
+//        Transformations.map(database.asteroidDao.getAsteroidsWithinTimeSpan(
+//            DateUtils.getDateWithoutTime(),
+//            DateUtils.getDateOfNextDay(Date()))) {
+//            it.asDomainModel()
+//        }
         Transformations.map(database.asteroidDao.getAllAsteroids()) {
             it.asDomainModel()
         }
@@ -57,7 +62,12 @@ class AsteroidsRepository(private val database: AsteroidsDatabase) {
     fun filterAsteroids(startDate: Date? = null, endDate: Date? = null) {
         asteroids = if (startDate != null && endDate != null) {
             Timber.i("filterAsteroids(): call database.asteroidDao.getAsteroids(startDate = $startDate, endDate = $endDate)")
-            Transformations.map(database.asteroidDao.getAsteroidsWithinTimeSpan(startDate, endDate)) {
+            Transformations.map(
+                database.asteroidDao.getAsteroidsWithinTimeSpan(
+                    startDate,
+                    endDate
+                )
+            ) {
                 it.asDomainModel()
             }
         } else {
@@ -78,7 +88,7 @@ class AsteroidsRepository(private val database: AsteroidsDatabase) {
      * To actually load the asteroids for use, observe asteroids.
      */
     suspend fun refreshAsteroids() {
-        val currentDate = getCurrentDateTime()
+        val currentDate = DateUtils.getDateWithoutTime()
         val endDate: String =
             DateUtils.getDate6DaysLater(currentDate).toString(ASTEROIDS_DATE_FORMAT)
         val startDate: String = currentDate.toString(ASTEROIDS_DATE_FORMAT)
@@ -91,5 +101,7 @@ class AsteroidsRepository(private val database: AsteroidsDatabase) {
 
             database.asteroidDao.insertAll(*asteroids.asDatabaseModel())
         }
+
+        Timber.i("refreshAsteroids() after server call. startDate: $startDate, endDate: $endDate")
     }
 }

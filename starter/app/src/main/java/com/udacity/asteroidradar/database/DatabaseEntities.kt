@@ -12,7 +12,7 @@ data class DatabaseAsteroid constructor(
     @PrimaryKey
     val id: Long,
     val codename: String,
-    val closeApproachDate: Date, //Date? // todo
+    val closeApproachDate: Date,
     val absoluteMagnitude: Double,
     val estimatedDiameter: Double,
     val relativeVelocity: Double,

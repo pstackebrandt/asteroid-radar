@@ -154,11 +154,10 @@ private fun parseAsteroid(asteroid: Map<*, *>): Asteroid {
 
 private fun getDateFromString(closeApproachDate: String, id: Long): Date {
     val formatter = SimpleDateFormat("yyyy-MM-dd", Locale.US)
-    val date: Date = formatter.parse(closeApproachDate)
+    return formatter.parse(closeApproachDate)
         ?: throw Exception(
             "parse of closeApproachDate $closeApproachDate for asteroid with id $id leads to null"
         )
-    return date
 }
 
 private fun getNearEarthObjects(asteroidsFullData: Map<*, *>): Map<*, *> {

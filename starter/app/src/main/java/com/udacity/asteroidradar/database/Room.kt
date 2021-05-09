@@ -21,6 +21,10 @@ interface AsteroidDao {
 //    @Query("select * from DatabaseAsteroid WHERE closeApproachDate == :targetDate ")
 //    fun getAsteroids(targetDate: Date): LiveData<List<DatabaseAsteroid>>
 
+    /**
+     * startDate should be without time of day to get all asteroids of day!
+     * time of endDate is not required currently.
+     */
     @Query(
         "select * from DatabaseAsteroid WHERE closeApproachDate >= :startDate AND closeApproachDate <= :endDate ORDER BY closeApproachDate DESC"
     )

@@ -42,17 +42,17 @@ class MainViewModel(application: Application) : ViewModel() {
         refreshAsteroids()
     }
 
-    val asteroids = asteroidsRepository.asteroids
+    val asteroids: LiveData<List<Asteroid>> = asteroidsRepository.asteroids
 
     fun filterAsteroids(filter: AsteroidsApiFilter) {
         Timber.i("updateFilter(): VIEW_TODAY_ASTEROIDS: $filter")
         when (filter) {
             AsteroidsApiFilter.VIEW_TODAY_ASTEROIDS -> {
-                val date = Date()
+                val date = DateUtils.getDateWithoutTime()
                 asteroidsRepository.filterAsteroids(date, date)
             }
             AsteroidsApiFilter.VIEW_WEEK_ASTEROIDS -> {
-                val startDate = Date()
+                val startDate = DateUtils.getDateWithoutTime()
                 asteroidsRepository.filterAsteroids(
                     startDate,
                     DateUtils.getDate6DaysLater(startDate)
@@ -64,21 +64,15 @@ class MainViewModel(application: Application) : ViewModel() {
         }
     }
 
-    /**
-     * Gets (filtered) asteroids information from the Asteroids API Retrofit service and
-     * updates the [Asteroid] [List] and [AsteroidsApiStatus] [LiveData].
-     * @param filter the [AsteroidsApiFilter] that is sent as part of the web server request
-     */
-//    private fun getAsteroids(filter: AsteroidsApiFilter) { // todo use filter
     private fun refreshAsteroids() {
         viewModelScope.launch {
             try {
-                Timber.i("getAsteroids(): before service call ")
+                Timber.i("refreshAsteroids(): before service call ")
                 asteroidsRepository.refreshAsteroids()
-                Timber.i("getAsteroids(): after service call ")
+                Timber.i("refreshAsteroids(): after service call ")
             } catch (e: Exception) {
-                Timber.i("getAsteroids(): exception ${e.message}")
-                Timber.i("getAsteroids(): exception ${e.stackTrace}")
+                Timber.i("refreshAsteroids(): exception ${e.message}")
+                Timber.i("refreshAsteroids(): exception ${e.stackTrace}")
             }
         }
     }
