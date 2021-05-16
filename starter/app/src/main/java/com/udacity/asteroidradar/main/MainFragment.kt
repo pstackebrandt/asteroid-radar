@@ -5,11 +5,18 @@ import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.observe
 import androidx.navigation.fragment.findNavController
 import com.udacity.asteroidradar.R
 import com.udacity.asteroidradar.databinding.FragmentMainBinding
 import com.udacity.asteroidradar.network.AsteroidsApiFilter
 import timber.log.Timber
+
+/**
+ * TODO
+ * Currently we loose reference to repository.asteroids after update of the variable by
+ * the repository on filter process.
+ */
 
 /**
  * This fragment shows the list of current asteroids and picture of the day.
@@ -33,6 +40,12 @@ class MainFragment : Fragment() {
     }
 
     /**
+     * ListAdapter of recycler view. We hold the reference so we can actualize
+     * the reference to asteroids data.
+     */
+    private lateinit var asteroidListAdapter: AsteroidListAdapter
+
+    /**
      * Inflates the layout with Data Binding, sets its lifecycle owner to the MainFragment
      * to enable Data Binding to observe LiveData, and sets up the RecyclerView with an adapter.
      */
@@ -51,13 +64,18 @@ class MainFragment : Fragment() {
         // Giving the binding access to the MainViewModel
         binding.viewModel = viewModel
 
-        // Sets the adapter of the RecyclerView
+        // Create adapter
+        // - set it as adapter of the RecyclerView
+        // - save it additionally in fragment
         binding.asteroidsRecyclerview.adapter = AsteroidListAdapter(
             AsteroidListAdapter.OnClickListener { asteroid ->
                 Timber.i("asteroid clicked: ${asteroid.codename}")
                 // start navigation to detail screen
                 viewModel.displayAsteroidDetails(asteroid)
             })
+            .apply {
+            asteroidListAdapter = this
+        }
 
         /**
          * Navigate to detail screen.
@@ -101,7 +119,23 @@ class MainFragment : Fragment() {
                 else -> AsteroidsApiFilter.VIEW_TODAY_ASTEROIDS
             }
         )
+        updateAsteroidsReferenceOfAsteroidListAdapter()
         return true // Because we've handled the menu item.
     }
 
+    /**
+     * Create observer, which observes asteroids of view model.
+     * Submits changes to asteroidListAdapter.
+     * Background: Variable asteroids gets not only changed/new data but also new LiveData object
+     * after filter call.
+     */
+    private fun updateAsteroidsReferenceOfAsteroidListAdapter() {
+        viewModel.asteroids.observe(viewLifecycleOwner) {
+            asteroidListAdapter.submitList(it)
+            Timber.i("asteroidListAdapter was called with submitList")
+            Timber.i("viewModel.asteroids contains ${viewModel.asteroids.value?.count()} asteroids")
+            Timber.i("asteroidsRepository.asteroids contains ${viewModel.asteroidsRepository.asteroids.value?.count()} asteroids")
+            Timber.i("asteroidsRepository.asteroids2 contains ${viewModel.asteroidsRepository.asteroids2.value?.count()} asteroids")
+        }
+    }
 }

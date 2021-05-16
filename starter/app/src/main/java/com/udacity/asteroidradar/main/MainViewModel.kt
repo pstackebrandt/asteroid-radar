@@ -9,7 +9,6 @@ import com.udacity.asteroidradar.network.AsteroidsApiFilter
 import com.udacity.asteroidradar.repository.AsteroidsRepository
 import kotlinx.coroutines.launch
 import timber.log.Timber
-import java.util.*
 
 enum class AsteroidsApiStatus { LOADING, ERROR, DONE }
 
@@ -36,13 +35,27 @@ class MainViewModel(application: Application) : ViewModel() {
         get() = _navigateToSelectedAsteroid
 
     private val database = getDatabase(application)
-    private val asteroidsRepository = AsteroidsRepository(database)
+    val asteroidsRepository = AsteroidsRepository(database)
+
+    /**
+     * Asteroids data.
+     *
+     * For setting the data we are using Transformations.map().
+     * We change the set of data if user decides for a new filter.
+     * Transformations.map() returns a new LiveData whenever called.
+     * This returned LiveData is not observed through DataBinding
+     * due to which the list is not getting updated.
+     * To fix this, we must add observer in fragment after applying the filter and
+     * submit the list which will then show the new list.
+     *
+     * Every time a filter is applied, new LiveData is observed and must be
+     * submitted to the list which will compute the diff and update new items.
+     */
+    var asteroids: LiveData<List<Asteroid>> = asteroidsRepository.asteroids
 
     init {
         refreshAsteroids()
     }
-
-    val asteroids: LiveData<List<Asteroid>> = asteroidsRepository.asteroids
 
     fun filterAsteroids(filter: AsteroidsApiFilter) {
         Timber.i("updateFilter(): VIEW_TODAY_ASTEROIDS: $filter")
@@ -91,7 +104,6 @@ class MainViewModel(application: Application) : ViewModel() {
     fun navigateToAsteroidDetailsComplete() {
         _navigateToSelectedAsteroid.value = null
     }
-
 
     /**
      * Factory for constructing MainViewModel with parameter

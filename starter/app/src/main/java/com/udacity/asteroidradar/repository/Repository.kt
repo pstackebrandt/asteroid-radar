@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.Transformations
 import com.udacity.asteroidradar.Asteroid
 import com.udacity.asteroidradar.DateUtils
+import com.udacity.asteroidradar.DateUtils.Companion.getDateWithoutTime
 import com.udacity.asteroidradar.DateUtils.Companion.toString
 import com.udacity.asteroidradar.api.parseAsteroids
 import com.udacity.asteroidradar.database.AsteroidsDatabase
@@ -41,19 +42,31 @@ class AsteroidsRepository(private val database: AsteroidsDatabase) {
 //        get() = _asteroids
 
     /**
+     * for temporary test only
+     */
+    var asteroids2: LiveData<List<Asteroid>> =
+        // temp get data for 2 days only
+        Transformations.map(database.asteroidDao.getAsteroidsWithinTimeSpan(
+            getDateWithoutTime(),
+            DateUtils.getDateOfNextDay(getDateWithoutTime()))) {
+            it.asDomainModel()
+        }
+
+    /**
      * Get list of asteroids initially.
      * We return domain objects, which are agnostic of Network or Database.
      */
     var asteroids: LiveData<List<Asteroid>> =
 //        // temp get data for 2 days only
-//        Transformations.map(database.asteroidDao.getAsteroidsWithinTimeSpan(
-//            DateUtils.getDateWithoutTime(),
-//            DateUtils.getDateOfNextDay(Date()))) {
-//            it.asDomainModel()
-//        }
-        Transformations.map(database.asteroidDao.getAllAsteroids()) {
+        Transformations.map(database.asteroidDao.getAsteroidsWithinTimeSpan(
+            getDateWithoutTime(),
+            DateUtils.getDateOfNextDay(getDateWithoutTime()))) {
             it.asDomainModel()
         }
+//        Transformations.map(database.asteroidDao.getAllAsteroids()) {
+//            it.asDomainModel()
+//        }
+
 
     /**
      * Get list of asteroids. Set time span.
@@ -61,7 +74,7 @@ class AsteroidsRepository(private val database: AsteroidsDatabase) {
      */
     fun filterAsteroids(startDate: Date? = null, endDate: Date? = null) {
         asteroids = if (startDate != null && endDate != null) {
-            Timber.i("filterAsteroids(): call database.asteroidDao.getAsteroids(startDate = $startDate, endDate = $endDate)")
+           // Timber.i("filterAsteroids(): call database.asteroidDao.getAsteroids(startDate = $startDate, endDate = $endDate)")
             Transformations.map(
                 database.asteroidDao.getAsteroidsWithinTimeSpan(
                     startDate,
@@ -76,6 +89,8 @@ class AsteroidsRepository(private val database: AsteroidsDatabase) {
                 it.asDomainModel()
             }
         }
+
+       // Timber.i("filterAsteroids() at end, var asteroid contains ${asteroids.value?.count()} asteroids")
     }
 
     /**
