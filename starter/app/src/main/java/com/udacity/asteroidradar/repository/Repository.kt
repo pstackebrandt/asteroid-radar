@@ -1,6 +1,7 @@
 package com.udacity.asteroidradar.repository
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import com.udacity.asteroidradar.Asteroid
 import com.udacity.asteroidradar.DateUtils
@@ -8,6 +9,7 @@ import com.udacity.asteroidradar.DateUtils.Companion.getDateWithoutTime
 import com.udacity.asteroidradar.DateUtils.Companion.toString
 import com.udacity.asteroidradar.api.parseAsteroids
 import com.udacity.asteroidradar.database.AsteroidsDatabase
+import com.udacity.asteroidradar.database.DatabaseAsteroid
 import com.udacity.asteroidradar.database.asDomainModel
 import com.udacity.asteroidradar.network.asDatabaseModel
 import kotlinx.coroutines.Dispatchers
@@ -46,52 +48,109 @@ class AsteroidsRepository(private val database: AsteroidsDatabase) {
      */
     var asteroids2: LiveData<List<Asteroid>> =
         // temp get data for 2 days only
-        Transformations.map(database.asteroidDao.getAsteroidsWithinTimeSpan(
-            getDateWithoutTime(),
-            DateUtils.getDateOfNextDay(getDateWithoutTime()))) {
+        Transformations.map(
+            database.asteroidDao.getAsteroidsWithinTimeSpan(
+                getDateWithoutTime(),
+                DateUtils.getDateOfNextDay(getDateWithoutTime())
+            )
+        ) {
             it.asDomainModel()
         }
 
-    /**
-     * Get list of asteroids initially.
-     * We return domain objects, which are agnostic of Network or Database.
-     */
-    var asteroids: LiveData<List<Asteroid>> =
-//        // temp get data for 2 days only
-        Transformations.map(database.asteroidDao.getAsteroidsWithinTimeSpan(
-            getDateWithoutTime(),
-            DateUtils.getDateOfNextDay(getDateWithoutTime()))) {
-            it.asDomainModel()
-        }
-//        Transformations.map(database.asteroidDao.getAllAsteroids()) {
+//    /**
+//     * Get list of asteroids initially.
+//     * We return domain objects, which are agnostic of Network or Database.
+//     */
+//    var asteroids: LiveData<List<Asteroid>> =
+////        // temp get data for 2 days only
+//        Transformations.map(
+//            database.asteroidDao.getAsteroidsWithinTimeSpan(
+//                getDateWithoutTime(),
+//                DateUtils.getDateOfNextDay(getDateWithoutTime())
+//            )
+//        ) {
 //            it.asDomainModel()
 //        }
+////        Transformations.map(database.asteroidDao.getAllAsteroids()) {
+////            it.asDomainModel()
+////        }
 
+
+    var _mutableAsteroids: MutableLiveData<List<Asteroid>> = getInitialMutableAsteroids()
+
+    private fun getInitialMutableAsteroids(): MutableLiveData<List<Asteroid>> {
+        var mutable: LiveData<List<Asteroid>> = MutableLiveData<List<Asteroid>>(listOf())
+
+        val databaseAsteroidsLiveData: LiveData<List<DatabaseAsteroid>> =
+            database.asteroidDao.getAllAsteroids()
+
+        mutable = Transformations.switchMap(databaseAsteroidsLiveData) {
+            val updatedAsteroids: List<Asteroid> = it.asDomainModel()
+
+            if (mutable is MutableLiveData<List<Asteroid>>) {
+                (mutable as MutableLiveData<List<Asteroid>>).value = updatedAsteroids
+            }
+
+            mutable
+        }
+
+        return mutable as MutableLiveData<List<Asteroid>>
+    }
+
+
+    val mutableAsteroids: LiveData<List<Asteroid>>
+        get() = _mutableAsteroids
+
+//    /**
+//     * Get list of asteroids. Set time span.
+//     * We return domain objects, which are agnostic of Network or Database.
+//     */
+//    fun filterAsteroids(startDate: Date? = null, endDate: Date? = null) {
+//        asteroids = if (startDate != null && endDate != null) {
+//            // Timber.i("filterAsteroids(): call database.asteroidDao.getAsteroids(startDate = $startDate, endDate = $endDate)")
+//            Transformations.map(
+//                database.asteroidDao.getAsteroidsWithinTimeSpan(
+//                    startDate,
+//                    endDate
+//                )
+//            ) {
+//                it.asDomainModel()
+//            }
+//        } else {
+//            val databaseAsteroidsLiveData: LiveData<List<DatabaseAsteroid>> =
+//                database.asteroidDao.getAllAsteroids()
+//
+//            Timber.i("filterAsteroids(): call database.asteroidDao.getAsteroids()")
+//            Transformations.map(databaseAsteroidsLiveData) {
+//                it.asDomainModel()
+//            }
+//        }
+//
+//        // Timber.i("filterAsteroids() at end, var asteroid contains ${asteroids.value?.count()} asteroids")
+//    }
 
     /**
      * Get list of asteroids. Set time span.
      * We return domain objects, which are agnostic of Network or Database.
      */
-    fun filterAsteroids(startDate: Date? = null, endDate: Date? = null) {
-        asteroids = if (startDate != null && endDate != null) {
-           // Timber.i("filterAsteroids(): call database.asteroidDao.getAsteroids(startDate = $startDate, endDate = $endDate)")
-            Transformations.map(
-                database.asteroidDao.getAsteroidsWithinTimeSpan(
-                    startDate,
-                    endDate
-                )
-            ) {
-                it.asDomainModel()
-            }
-        } else {
-            Timber.i("filterAsteroids(): call database.asteroidDao.getAsteroids()")
-            Transformations.map(database.asteroidDao.getAllAsteroids()) {
-                it.asDomainModel()
-            }
-        }
+    fun filterAsteroids() {
+        var myAsteroids: LiveData<List<Asteroid>> = _mutableAsteroids
 
-       // Timber.i("filterAsteroids() at end, var asteroid contains ${asteroids.value?.count()} asteroids")
+        val databaseAsteroidsLiveData: LiveData<List<DatabaseAsteroid>> =
+            database.asteroidDao.getAllAsteroids()
+
+        myAsteroids = Transformations.switchMap(databaseAsteroidsLiveData) {
+            val updatedAsteroids: List<Asteroid> = it.asDomainModel()
+            if (myAsteroids is MutableLiveData<List<Asteroid>>) {
+                (myAsteroids as MutableLiveData<List<Asteroid>>).value = updatedAsteroids
+            }
+
+            myAsteroids
+        }
+        Timber.i("filterAsteroids(): count of asteroids: ${myAsteroids.value?.count()}")
+        _mutableAsteroids.value = myAsteroids.value
     }
+
 
     /**
      * Refresh the Asteroid data stored in the offline cache.

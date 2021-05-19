@@ -51,7 +51,8 @@ class MainViewModel(application: Application) : ViewModel() {
      * Every time a filter is applied, new LiveData is observed and must be
      * submitted to the list which will compute the diff and update new items.
      */
-    var asteroids: LiveData<List<Asteroid>> = asteroidsRepository.asteroids
+//    var asteroids: LiveData<List<Asteroid>> = asteroidsRepository.asteroids
+    var asteroids: LiveData<List<Asteroid>> = asteroidsRepository.mutableAsteroids
 
     init {
         refreshAsteroids()
@@ -59,22 +60,22 @@ class MainViewModel(application: Application) : ViewModel() {
 
     fun filterAsteroids(filter: AsteroidsApiFilter) {
         Timber.i("updateFilter(): VIEW_TODAY_ASTEROIDS: $filter")
-        when (filter) {
-            AsteroidsApiFilter.VIEW_TODAY_ASTEROIDS -> {
-                val date = DateUtils.getDateWithoutTime()
-                asteroidsRepository.filterAsteroids(date, date)
-            }
-            AsteroidsApiFilter.VIEW_WEEK_ASTEROIDS -> {
-                val startDate = DateUtils.getDateWithoutTime()
-                asteroidsRepository.filterAsteroids(
-                    startDate,
-                    DateUtils.getDate6DaysLater(startDate)
-                )
-            }
-            else -> {   // show all saved asteroids
+//        when (filter) {
+//            AsteroidsApiFilter.VIEW_TODAY_ASTEROIDS -> {
+//                val date = DateUtils.getDateWithoutTime()
+//                asteroidsRepository.filterAsteroids(date, date)
+//            }
+//            AsteroidsApiFilter.VIEW_WEEK_ASTEROIDS -> {
+//                val startDate = DateUtils.getDateWithoutTime()
+//                asteroidsRepository.filterAsteroids(
+//                    startDate,
+//                    DateUtils.getDate6DaysLater(startDate)
+//                )
+//            }
+//            else -> {   // show all saved asteroids
                 asteroidsRepository.filterAsteroids()
-            }
-        }
+//            }
+//        }
     }
 
     private fun refreshAsteroids() {
