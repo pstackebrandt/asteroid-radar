@@ -4,78 +4,109 @@ import android.app.Application
 import androidx.lifecycle.*
 import com.udacity.asteroidradar.Asteroid
 import com.udacity.asteroidradar.DateUtils
+import com.udacity.asteroidradar.database.DatabaseAsteroid
+import com.udacity.asteroidradar.database.asDomainModel
 import com.udacity.asteroidradar.database.getDatabase
 import com.udacity.asteroidradar.network.AsteroidsApiFilter
 import com.udacity.asteroidradar.repository.AsteroidsRepository
 import kotlinx.coroutines.launch
 import timber.log.Timber
+import java.util.*
 
 enum class AsteroidsApiStatus { LOADING, ERROR, DONE }
 
 /**
- * The [ViewModel] that is attached to the [MainFragment].
+ * The [ViewModel] that's attached to the [MainFragment].
  */
 class MainViewModel(application: Application) : ViewModel() {
 
-    // Internally, we use a MutableLiveData, because we will be updating the List of Asteroids
-    // with new values
-    // private val _asteroids = MutableLiveData<List<Asteroid>>()
-
-    // The external LiveData interface to the property is immutable, so only this class can modify
-    // val asteroids: LiveData<List<Asteroid>>
-    // get() = _asteroids
-
-    // Internally, we use a MutableLiveData to handle navigation to the selected asteroid
+    /** Internally, we use a MutableLiveData to handle navigation to the selected asteroid */
     private val _navigateToSelectedAsteroid = MutableLiveData<Asteroid>()
 
-    // The external immutable LiveData for the navigation asteroid
-    /** If navigation is required, this property contains the [Asteroid] to which we want to navigate.
+    /** The external immutable LiveData for the navigation asteroid.
+     * If navigation is required, this property contains the [Asteroid] to which we want to navigate.
      * Tells thereby whether navigation is required. */
     val navigateToSelectedAsteroid: LiveData<Asteroid>
         get() = _navigateToSelectedAsteroid
 
     private val database = getDatabase(application)
-    val asteroidsRepository = AsteroidsRepository(database)
+    private val asteroidsRepository = AsteroidsRepository(database)
 
     /**
      * Asteroids data.
      *
-     * For setting the data we are using Transformations.map().
-     * We change the set of data if user decides for a new filter.
+     * We are using Transformations.map() to set the asteroids data.
+     * We change the data set if user decides for a new filter.
      * Transformations.map() returns a new LiveData whenever called.
-     * This returned LiveData is not observed through DataBinding
-     * due to which the list is not getting updated.
+     * This new LiveData is not observed by DataBinding.
+     * That's why the display won't get an update.
      * To fix this, we must add observer in fragment after applying the filter and
      * submit the list which will then show the new list.
      *
      * Every time a filter is applied, new LiveData is observed and must be
      * submitted to the list which will compute the diff and update new items.
      */
-//    var asteroids: LiveData<List<Asteroid>> = asteroidsRepository.asteroids
-    var asteroids: LiveData<List<Asteroid>> = asteroidsRepository.mutableAsteroids
+    var asteroids: LiveData<List<Asteroid>> =
+        Transformations.map(                    // todo call filterAsteroids() instead?
+            database.asteroidDao.getAsteroidsWithinTimeSpan(
+                DateUtils.getDateWithoutTime(),
+                DateUtils.getDateOfNextDay(DateUtils.getDateWithoutTime())
+            )
+        ) {
+            it.asDomainModel()
+        }
 
     init {
         refreshAsteroids()
     }
 
+    /** Filters asteroids using an [AsteroidsApiFilter]. */
     fun filterAsteroids(filter: AsteroidsApiFilter) {
-        Timber.i("updateFilter(): VIEW_TODAY_ASTEROIDS: $filter")
-//        when (filter) {
-//            AsteroidsApiFilter.VIEW_TODAY_ASTEROIDS -> {
-//                val date = DateUtils.getDateWithoutTime()
-//                asteroidsRepository.filterAsteroids(date, date)
-//            }
-//            AsteroidsApiFilter.VIEW_WEEK_ASTEROIDS -> {
-//                val startDate = DateUtils.getDateWithoutTime()
-//                asteroidsRepository.filterAsteroids(
-//                    startDate,
-//                    DateUtils.getDate6DaysLater(startDate)
-//                )
-//            }
-//            else -> {   // show all saved asteroids
-                asteroidsRepository.filterAsteroids()
-//            }
-//        }
+        Timber.i("filterAsteroids(): filter: $filter")
+        when (filter) {
+            AsteroidsApiFilter.VIEW_TODAY_ASTEROIDS -> {
+                val date = DateUtils.getDateWithoutTime()
+                filterAsteroids(date, date)
+            }
+            AsteroidsApiFilter.VIEW_WEEK_ASTEROIDS -> {
+                val startDate = DateUtils.getDateWithoutTime()
+                filterAsteroids(
+                    startDate,
+                    DateUtils.getDate6DaysLater(startDate)
+                )
+            }
+            else -> {   // show all saved asteroids
+                filterAsteroids()
+            }
+        }
+    }
+
+    /**
+     * Get list of asteroids. Set time span.
+     * We return domain objects, which are agnostic of Network or Database.
+     */
+    private fun filterAsteroids(startDate: Date? = null, endDate: Date? = null) {
+        asteroids = if (startDate != null && endDate != null) {
+            // Timber.i("filterAsteroids(): call database.asteroidDao.getAsteroids(startDate = $startDate, endDate = $endDate)")
+            Transformations.map(
+                database.asteroidDao.getAsteroidsWithinTimeSpan(
+                    startDate,
+                    endDate
+                )
+            ) {
+                it.asDomainModel()
+            }
+        } else {
+            val databaseAsteroidsLiveData: LiveData<List<DatabaseAsteroid>> =
+                database.asteroidDao.getAllAsteroids()
+
+            Timber.i("filterAsteroids(): call database.asteroidDao.getAsteroids()")
+            Transformations.map(databaseAsteroidsLiveData) {
+                it.asDomainModel()
+            }
+        }
+
+        // Timber.i("filterAsteroids() at end, var asteroid contains ${asteroids.value?.count()} asteroids")
     }
 
     private fun refreshAsteroids() {

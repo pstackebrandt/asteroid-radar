@@ -30,10 +30,12 @@ class DateUtils {
          * inspired by https://stackoverflow.com/questions/47006254/how-to-get-current-local-date-and-time-in-kotlin
          * use by: val dateInString = date.toString("yyyy/MM/dd HH:mm:ss")
          */
-        fun Date.toString(
+        private fun Date.toString(
             format: String,
             locale: Locale = Locale.getDefault()
         ) = SimpleDateFormat(format, locale).format(this)
+
+        fun Date.toAsteroidsDateString() = this.toString(ASTEROIDS_DATE_FORMAT)
 
         /**
          * Get string from date in format: "yyyy-MM-dd"

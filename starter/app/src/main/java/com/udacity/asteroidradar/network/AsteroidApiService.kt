@@ -13,10 +13,12 @@ private const val BASE_URL = Constants.BASE_URL
 private const val API_KEY = Constants.API_KEY
 private const val ASTEROIDS_API_DATE_FORMAT = "yyyy-MM-dd"
 
+/**
+ * Describes amount of asteroids.
+ */
 enum class AsteroidsApiFilter(val value: String) {
     VIEW_WEEK_ASTEROIDS("view.week.asteroids"),
-    VIEW_TODAY_ASTEROIDS
-        ("view.today.asteroids"),
+    VIEW_TODAY_ASTEROIDS("view.today.asteroids"),
     VIEW_SAVED_ASTEROIDS("view.saved.asteroids")
 }
 
@@ -58,7 +60,7 @@ interface AsteroidApiService {
         @Query("api_key")
         key: String = API_KEY
     )
-    : Any
+            : Any
 
     // I need a JsonObject or something I can transform into a JsonObject.
     // I tried those:

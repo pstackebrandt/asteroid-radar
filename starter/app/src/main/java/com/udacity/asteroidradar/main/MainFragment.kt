@@ -13,12 +13,6 @@ import com.udacity.asteroidradar.network.AsteroidsApiFilter
 import timber.log.Timber
 
 /**
- * TODO
- * Currently we loose reference to repository.asteroids after update of the variable by
- * the repository on filter process.
- */
-
-/**
  * This fragment shows the list of current asteroids and picture of the day.
  */
 class MainFragment : Fragment() {
@@ -134,9 +128,7 @@ class MainFragment : Fragment() {
             asteroidListAdapter.submitList(it)
             Timber.i("asteroidListAdapter was called with submitList")
             Timber.i("viewModel.asteroids contains ${viewModel.asteroids.value?.count()} asteroids")
-//            Timber.i("asteroidsRepository.asteroids contains ${viewModel.asteroidsRepository.asteroids.value?.count()} asteroids")
-            Timber.i("asteroidsRepository.asteroids contains ${viewModel.asteroidsRepository.mutableAsteroids.value?.count()} asteroids")
-            Timber.i("asteroidsRepository.asteroids2 contains ${viewModel.asteroidsRepository.asteroids2.value?.count()} asteroids")
+
         }
     }
 }
