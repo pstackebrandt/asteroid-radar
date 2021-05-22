@@ -35,18 +35,18 @@ class DateUtils {
             locale: Locale = Locale.getDefault()
         ) = SimpleDateFormat(format, locale).format(this)
 
-        fun Date.toAsteroidsDateString() = this.toString(ASTEROIDS_DATE_FORMAT)
+        fun Date.toAsteroidsDateString(): String = this.toString(ASTEROIDS_DATE_FORMAT)
 
         /**
          * Get string from date in format: "yyyy-MM-dd"
          */
-        fun Date.toYearMonthsDays() = this.toString(ASTEROIDS_DATE_FORMAT)
+        fun Date.toYearMonthsDays(): String = this.toString(ASTEROIDS_DATE_FORMAT)
 
         /**
          * inspired by https://stackoverflow.com/questions/47006254/how-to-get-current-local-date-and-time-in-kotlin
          * use by: val date = getCurrentDateTime()
          */
-        fun getCurrentDateTime() = Calendar.getInstance()
+        fun getCurrentDateTime(): Date = Calendar.getInstance()
             .time
 
         /**

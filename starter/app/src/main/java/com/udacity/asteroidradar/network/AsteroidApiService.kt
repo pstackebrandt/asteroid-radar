@@ -11,7 +11,6 @@ import retrofit2.http.Query
 
 private const val BASE_URL = Constants.BASE_URL
 private const val API_KEY = Constants.API_KEY
-private const val ASTEROIDS_API_DATE_FORMAT = "yyyy-MM-dd"
 
 /**
  * Describes amount of asteroids.
@@ -45,12 +44,10 @@ private val retrofit = Retrofit.Builder()
 interface AsteroidApiService {
 
     /**
-     * TODO actualize comment
      * Returns a Coroutine [List] of [Asteroid] which can be fetched with
-     * await() if in a Coroutine scope. The @GET annotation indicates that the
-     * "planetary/apod" endpoint will be requested with the GET HTTP method
+     * await() if in a Coroutine scope.
      */
-    //@GET("neo/rest/v1/feed?start_date=2021-04-17&end_date=2021-04-18&api_key=6Q4cMVxnARH5Jlgx976YDc41iz860XEOthEXQtKR")
+    //@GET("neo/rest/v1/feed?start_date=2021-04-17&end_date=2021-04-18&api_key=MyKey")
     @GET("neo/rest/v1/feed")
     suspend fun getAsteroids(
         @Query("start_date")
