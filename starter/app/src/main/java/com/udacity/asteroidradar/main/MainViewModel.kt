@@ -13,8 +13,6 @@ import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.util.*
 
-enum class AsteroidsApiStatus { LOADING, ERROR, DONE }
-
 /**
  * The [ViewModel] that's attached to the [MainFragment].
  */
