@@ -1,6 +1,7 @@
 package com.udacity.asteroidradar.api
 
 import android.net.ParseException
+import android.os.Build
 import com.udacity.asteroidradar.Asteroid
 import com.udacity.asteroidradar.Constants
 import timber.log.Timber
@@ -56,7 +57,11 @@ private fun getNextSevenDaysFormattedDates(): ArrayList<String> {
     val calendar = Calendar.getInstance()
     for (i in 0..Constants.DEFAULT_END_DATE_DAYS) {
         val currentTime = calendar.time
-        val dateFormat = SimpleDateFormat(Constants.API_QUERY_DATE_FORMAT, Locale.getDefault())
+        val dateFormat = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            SimpleDateFormat(Constants.API_QUERY_DATE_FORMAT, Locale.getDefault())
+        } else {
+            TODO("VERSION.SDK_INT < N")
+        }
         formattedDateList.add(dateFormat.format(currentTime))
         calendar.add(Calendar.DAY_OF_YEAR, 1)
     }
