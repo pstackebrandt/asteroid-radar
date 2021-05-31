@@ -62,3 +62,15 @@ fun List<DatabaseDailyPicture>.asDomainModel(): List<DailyPicture> {
         )
     }
 }
+
+/** Transform database daily pictures into domain daily . */
+@JvmName("databaseDailyPicturesAsDomainModel")
+fun DatabaseDailyPicture.asDomainModel(): DailyPicture {
+    return DailyPicture(
+        id = this.id,
+        date = this.date,
+        mediaType = this.mediaType,
+        title = this.title,
+        url = this.url
+    )
+}

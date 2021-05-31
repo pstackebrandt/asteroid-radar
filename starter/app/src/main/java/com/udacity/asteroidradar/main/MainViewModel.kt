@@ -7,6 +7,7 @@ import com.udacity.asteroidradar.DateUtils
 import com.udacity.asteroidradar.database.DatabaseAsteroid
 import com.udacity.asteroidradar.database.asDomainModel
 import com.udacity.asteroidradar.database.getDatabase
+import com.udacity.asteroidradar.domain.DailyPicture
 import com.udacity.asteroidradar.network.AsteroidsApiFilter
 import com.udacity.asteroidradar.repository.AsteroidsRepository
 import kotlinx.coroutines.launch
@@ -46,11 +47,18 @@ class MainViewModel(application: Application) : ViewModel() {
      * submitted to the list which will compute the diff and update new items.
      */
     var asteroids: LiveData<List<Asteroid>> =
-        Transformations.map(                    // todo call filterAsteroids() instead?
+        Transformations.map(
             database.asteroidDao.getAsteroidsWithinTimeSpan(
                 DateUtils.getDateWithoutTime(),
                 DateUtils.getDateOfNextDay(DateUtils.getDateWithoutTime())
             )
+        ) {
+            it.asDomainModel()
+        }
+
+    var dailyPictureData: LiveData<DailyPicture> =
+        Transformations.map(
+            database.dailyPictureDao.getLastDailyPictureWithImage(DateUtils.getDateWithoutTime())
         ) {
             it.asDomainModel()
         }

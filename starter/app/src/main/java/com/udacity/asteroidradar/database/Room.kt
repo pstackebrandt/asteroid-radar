@@ -51,7 +51,7 @@ interface DailyPictureDao {
      * Get daily picture of current day from database.
      */
     @Query("select * from DatabaseDailyPicture WHERE date = :currentDate ")
-    fun getLastDailyPictureWithImage(currentDate: Date): LiveData<List<DatabaseDailyPicture>>
+    fun getLastDailyPictureWithImage(currentDate: Date): LiveData<DatabaseDailyPicture>
 
     /** Insert daily picture into database. Replace picture,
      * that already exists. */
