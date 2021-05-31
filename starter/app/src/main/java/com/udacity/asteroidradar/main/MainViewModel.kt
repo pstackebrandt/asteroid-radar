@@ -57,6 +57,21 @@ class MainViewModel(application: Application) : ViewModel() {
 
     init {
         refreshAsteroids()
+        refreshDailyPicture()
+    }
+
+    /** Get data of daily image */
+    private fun refreshDailyPicture() {
+        viewModelScope.launch {
+            try {
+                Timber.i("refreshDailyPicture(): before service call ")
+                asteroidsRepository.refreshDailyPicture()
+                Timber.i("refreshDailyPicture(): after service call ")
+            } catch (e: Exception) {
+                Timber.i("refreshDailyPicture(): exception ${e.message}")
+                Timber.i("refreshDailyPicture(): exception ${e.stackTrace}")
+            }
+        }
     }
 
     /** Filters asteroids using an [AsteroidsApiFilter]. */

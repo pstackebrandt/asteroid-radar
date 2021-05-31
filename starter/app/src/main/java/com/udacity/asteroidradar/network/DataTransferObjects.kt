@@ -2,9 +2,11 @@ package com.udacity.asteroidradar.network
 
 import com.udacity.asteroidradar.Asteroid
 import com.udacity.asteroidradar.database.DatabaseAsteroid
+import com.udacity.asteroidradar.database.DatabaseDailyPicture
+import com.udacity.asteroidradar.domain.DailyPicture
 
 /**
- * DataTransferObjects go in this file.
+ * File contains DataTransferObjects.
  * These are responsible for parsing responses from the server
  * or formatting objects to send to the server. You should convert these to domain objects before
  * using them.
@@ -30,4 +32,34 @@ fun List<Asteroid>.asDatabaseModel(): Array<DatabaseAsteroid> {
         )
 
     }.toTypedArray()
+}
+
+/**
+ * Converts from domain objects to database objects
+ * Antetype of this method was DevBytes NetworkVideoContainer.asDomainModel().
+ */
+fun List<DailyPicture>.asDatabaseModel(): Array<DatabaseDailyPicture> {
+    return this.map {
+        DatabaseDailyPicture(
+            id = it.id,
+            date = it.date,
+            mediaType = it.mediaType,
+            title = it.title,
+            url = it.url
+        )
+    }.toTypedArray()
+}
+
+/**
+ * Converts from domain object to database objects
+ * Antetype of this method was DevBytes NetworkVideoContainer.asDomainModel().
+ */
+fun DailyPicture.asDatabaseModel(): DatabaseDailyPicture {
+    return DatabaseDailyPicture(
+        id = this.id,
+        date = this.date,
+        mediaType = this.mediaType,
+        title = this.title,
+        url = this.url
+    )
 }

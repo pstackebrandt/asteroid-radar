@@ -2,7 +2,6 @@ package com.udacity.asteroidradar.database
 
 import android.content.Context
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.room.*
 import java.util.*
 
@@ -37,11 +36,35 @@ interface AsteroidDao {
     fun insertAll(vararg asteroids: DatabaseAsteroid)
 }
 
+/**
+ * Describes interactions with database according to data of daily picture.
+ */
+@Dao
+interface DailyPictureDao {
+    /**
+     *  Get all daily pictures from database.
+     */
+    @Query("select * from DatabaseDailyPicture ORDER BY ID DESC")
+    fun getAllDailyPictures(): LiveData<List<DatabaseDailyPicture>>
+
+    /**
+     * Get daily picture of current day from database.
+     */
+    @Query("select * from DatabaseDailyPicture WHERE date = :currentDate ")
+    fun getLastDailyPictureWithImage(currentDate: Date): LiveData<List<DatabaseDailyPicture>>
+
+    /** Insert daily picture into database. Replace picture,
+     * that already exists. */
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insert(picture: DatabaseDailyPicture)
+}
+
 /** Describes the database */
-@Database(entities = [DatabaseAsteroid::class], version = 1)
+@Database(entities = [DatabaseAsteroid::class, DatabaseDailyPicture::class], version = 2)
 @TypeConverters(Converters::class)
 abstract class AsteroidsDatabase : RoomDatabase() {
     abstract val asteroidDao: AsteroidDao
+    abstract val dailyPictureDao: DailyPictureDao
 }
 
 /** Get database. Creates database if it not already exists. */
@@ -53,6 +76,7 @@ fun getDatabase(context: Context): AsteroidsDatabase {
                 AsteroidsDatabase::class.java,
                 "asteroids"
             )
+                .fallbackToDestructiveMigration()
                 .build()
         }
     }

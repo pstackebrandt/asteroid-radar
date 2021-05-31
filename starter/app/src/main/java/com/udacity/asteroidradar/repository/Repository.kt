@@ -4,7 +4,9 @@ import com.udacity.asteroidradar.Asteroid
 import com.udacity.asteroidradar.DateUtils
 import com.udacity.asteroidradar.DateUtils.Companion.toAsteroidsDateString
 import com.udacity.asteroidradar.api.parseAsteroids
+import com.udacity.asteroidradar.api.parseDailyPicture
 import com.udacity.asteroidradar.database.AsteroidsDatabase
+import com.udacity.asteroidradar.domain.DailyPicture
 import com.udacity.asteroidradar.network.asDatabaseModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -54,4 +56,22 @@ class AsteroidsRepository(private val database: AsteroidsDatabase) {
 
         Timber.i("refreshAsteroids() after server call. startDate: $startDate, endDate: $endDate")
     }
+
+    suspend fun refreshDailyPicture() {
+        Timber.i("refreshDailyPicture() before server call.")
+
+        withContext(Dispatchers.IO) {
+            try {
+                val rawDailyPicture = AsteroidService.getDailyPictureData() as Map<*, *>
+                val dailyPicture: DailyPicture = parseDailyPicture(rawDailyPicture)
+                Timber.i("refreshDailyPicture() rawPictureDataAny: $rawDailyPicture")
+                database.dailyPictureDao.insert(dailyPicture.asDatabaseModel())
+            } catch (exc: Exception) {
+                Timber.e("refreshDailyPicture()  ${exc.message}")
+            }
+        }
+
+        Timber.i("refreshDailyPicture() after server call.")
+    }
 }
+

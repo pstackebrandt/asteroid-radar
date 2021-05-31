@@ -59,6 +59,20 @@ interface AsteroidApiService {
     )
             : Any
 
+    /**
+     * Returns a Coroutine [List] of Daily Picture data which can be fetched with
+     * await() if in a Coroutine scope.
+     */
+    // @GET("planetary/apod?api_key=6Q4cMVxnARH5Jlgx976YDc41iz860XEOthEXQtKR")
+    // https://api.nasa.gov/planetary/apod?api_key=6Q4cMVxnARH5Jlgx976YDc41iz860XEOthEXQtKR
+    @GET("planetary/apod")
+    suspend fun getDailyPictureData(
+        @Query("api_key")
+        key: String = API_KEY
+    )
+            : Any
+
+
     // I need a JsonObject or something I can transform into a JsonObject.
     // I tried those:
     // : Response<String>  // Error message: "Expected a string but was BEGIN_OBJECT at path $ "

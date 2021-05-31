@@ -4,6 +4,8 @@ import android.net.ParseException
 import android.os.Build
 import com.udacity.asteroidradar.Asteroid
 import com.udacity.asteroidradar.Constants
+import com.udacity.asteroidradar.DateUtils
+import com.udacity.asteroidradar.domain.DailyPicture
 import timber.log.Timber
 import java.text.SimpleDateFormat
 import java.util.*
@@ -87,24 +89,24 @@ fun parseAsteroids(asteroidsFullData: Map<*, *>): List<Asteroid> {
 
     val domainAsteroids = mutableListOf<Asteroid>()
 
-    for (asteroidsOfDayPair: Pair<*,*> in nearEarthObjects.toList()) {
+    for (asteroidsOfDayPair: Pair<*, *> in nearEarthObjects.toList()) {
         val asteroidsOfDayList: ArrayList<*> = asteroidsOfDayPair.second as ArrayList<*>
 
-            for (asteroid in asteroidsOfDayList) {
-                if (asteroid is Map<*, *>) {
-                    val asteroidParseResult =
-                        try {
-                            parseAsteroid(asteroid)
-                        } catch (exc: ParseException) {
-                            Timber.e("parseAsteroids() Parse error on parsing single asteroid $exc.message")
-                        }
-
-                    if (asteroidParseResult is Asteroid) {
-                        domainAsteroids += asteroidParseResult
-                        Timber.i("Parsed asteroid: ${asteroidParseResult.codename} : ${asteroidParseResult.closeApproachDate}")
+        for (asteroid in asteroidsOfDayList) {
+            if (asteroid is Map<*, *>) {
+                val asteroidParseResult =
+                    try {
+                        parseAsteroid(asteroid)
+                    } catch (exc: ParseException) {
+                        Timber.e("parseAsteroids() Parse error on parsing single asteroid $exc.message")
                     }
+
+                if (asteroidParseResult is Asteroid) {
+                    domainAsteroids += asteroidParseResult
+                    Timber.i("Parsed asteroid: ${asteroidParseResult.codename} : ${asteroidParseResult.closeApproachDate}")
                 }
             }
+        }
 
     }
 
@@ -157,11 +159,29 @@ private fun parseAsteroid(asteroid: Map<*, *>): Asteroid {
     )
 }
 
-private fun getDateFromString(closeApproachDate: String, id: Long): Date {
+fun parseDailyPicture(rawPictureData: Map<*, *>): DailyPicture {
+    Timber.i("parseDailyPicture() start")
+
+    val rawDate = rawPictureData["date"] as String
+    val date = DateUtils.getDateFromString(
+        rawDate,
+        "Parse of date of daily picture failed."
+    )
+
+    return DailyPicture(
+        id = rawDate,
+        date = date,
+        title = rawPictureData["title"] as String,
+        mediaType = rawPictureData["media_type"] as String,
+        url = rawPictureData["url"] as String
+    )
+}
+
+private fun getDateFromString(date: String, id: Long): Date {
     val formatter = SimpleDateFormat("yyyy-MM-dd", Locale.US)
-    return formatter.parse(closeApproachDate)
+    return formatter.parse(date)
         ?: throw Exception(
-            "parse of closeApproachDate $closeApproachDate for asteroid with id $id leads to null"
+            "parse of closeApproachDate $date for asteroid with id $id leads to null"
         )
 }
 
