@@ -21,6 +21,7 @@
     <string name="nasa_picture_of_day_content_description_format">NASA\'s picture of day: %s</string>
     <string name="icon_asteroid_safety_description">icon reflecting hazardousness of asteroid</string>
     <string name="image_of_the_day_view_description">NASA\'s image of the day</string>
-    <string name="activity_main_image_of_the_day__content_description">Image shows whether asteroid is potentialy hazardous. It\'s a funny picture.</string>
+    <string name="activity_main_image_of_the_day__content_description">Image shows whether asteroid is potentially hazardous. It\'s a funny picture.</string>
     <string name="help_button__content_description">Button for help info</string>
+    <string name="title_of_daily_picture__content_description">Title of image of the day</string>
 </resources>

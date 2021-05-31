@@ -93,8 +93,9 @@ class MainFragment : Fragment() {
         viewModel.dailyPictureData.observe(viewLifecycleOwner, Observer {
             it?.let { dailyPicture ->
                 Timber.i("Observer of dailyPictureData: ${dailyPicture.url}")
-                //binding.activityMainImageOfTheDay
                 Picasso.get().load(dailyPicture.url).into(binding.activityMainImageOfTheDay)
+                binding.activityMainImageOfTheDay.contentDescription = dailyPicture.title
+                binding.titleOfDailyPictureTextView.text = dailyPicture.title
             }
         })
 

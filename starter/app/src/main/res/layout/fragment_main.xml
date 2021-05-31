@@ -38,8 +38,9 @@
                 />
 
             <TextView
-                android:id="@+id/textView"
+                android:id="@+id/title_of_daily_picture__text_view"
                 android:text="@string/image_of_the_day"
+                android:contentDescription="@string/title_of_daily_picture__content_description"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="16dp"
