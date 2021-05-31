@@ -7,6 +7,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.observe
 import androidx.navigation.fragment.findNavController
+import com.squareup.picasso.Picasso
 import com.udacity.asteroidradar.R
 import com.udacity.asteroidradar.databinding.FragmentMainBinding
 import com.udacity.asteroidradar.network.AsteroidsApiFilter
@@ -84,6 +85,16 @@ class MainFragment : Fragment() {
                 this.findNavController().navigate(MainFragmentDirections.actionShowDetail(it))
                 // Tell the ViewModel we've made the navigate call to prevent multiple navigation
                 viewModel.navigateToAsteroidDetailsComplete()
+            }
+        })
+
+        // Observe daily picture data
+        // Load picture by picasso. Bind it to view.
+        viewModel.dailyPictureData.observe(viewLifecycleOwner, Observer {
+            it?.let { dailyPicture ->
+                Timber.i("Observer of dailyPictureData: ${dailyPicture.url}")
+                //binding.activityMainImageOfTheDay
+                Picasso.get().load(dailyPicture.url).into(binding.activityMainImageOfTheDay)
             }
         })
 
