@@ -48,9 +48,10 @@ interface DailyPictureDao {
     fun getAllDailyPictures(): LiveData<List<DatabaseDailyPicture>>
 
     /**
-     * Get daily picture of current day from database.
+     * Constraints: Get last daily picture from database which has media type 'image'.
+     * Get usually daily picture of current day.
      */
-    @Query("select * from DatabaseDailyPicture WHERE date = :currentDate ")
+    @Query("select * from DatabaseDailyPicture WHERE mediaType == 'image' AND date <= :currentDate ORDER BY date DESC LIMIT 1")
     fun getLastDailyPictureWithImage(currentDate: Date): LiveData<DatabaseDailyPicture>
 
     /** Insert daily picture into database. Replace picture,
