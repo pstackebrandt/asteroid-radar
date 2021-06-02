@@ -58,10 +58,9 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="4dp"
-                        android:text="@{asteroid.closeApproachDate.toLocaleString()}"
+                        dateWithoutTime="@{asteroid.closeApproachDate}"
                         android:textColor="@color/default_text_color"
                         tools:text="2020-02-01" />
-                    <!-- todo print date without time -->
                 </LinearLayout>
 
                 <LinearLayout

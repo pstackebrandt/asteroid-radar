@@ -4,7 +4,9 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.udacity.asteroidradar.DateUtils.Companion.toYearMonthsDays
 import com.udacity.asteroidradar.main.AsteroidListAdapter
+import java.util.*
 
 /**
  * Bind corresponding hazard smiley icon to [imageView].
@@ -30,6 +32,13 @@ fun bindDetailsStatusImage(imageView: ImageView, isHazardous: Boolean) {
     } else {
         imageView.setImageResource(R.drawable.asteroid_safe)
     }
+}
+
+/** Get formatted string with unit au (Astronomical unit) */
+@BindingAdapter("dateWithoutTime")
+fun bindTextViewToDate(textView: TextView, date: Date) {
+    // val context = textView.context
+    textView.text = date.toYearMonthsDays()
 }
 
 /** Get formatted string with unit au (Astronomical unit) */
@@ -63,6 +72,6 @@ fun bindRecyclerView(
     val adapter = recyclerView.adapter as AsteroidListAdapter
     adapter.submitList(asteroids) {
         // scroll the list to the top after the diffs are calculated and posted
-         recyclerView.scrollToPosition(0)
+        recyclerView.scrollToPosition(0)
     }
 }

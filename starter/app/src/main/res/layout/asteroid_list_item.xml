@@ -44,7 +44,7 @@
 
         <TextView
             android:id="@+id/close_approach_date_textview"
-            android:text="@{asteroid.closeApproachDate.toLocaleString()}"
+            dateWithoutTime="@{asteroid.closeApproachDate}"
             tools:text="2020-02-08"
 
             android:layout_width="0dp"
