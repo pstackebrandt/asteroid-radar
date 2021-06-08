@@ -34,13 +34,13 @@
                 android:layout_height="match_parent"
 
                 android:adjustViewBounds="true"
-                android:scaleType="centerCrop"
-                />
+                android:scaleType="centerCrop" />
 
             <TextView
                 android:id="@+id/title_of_daily_picture__text_view"
                 android:text="@string/image_of_the_day"
                 android:contentDescription="@string/title_of_daily_picture__content_description"
+
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="16dp"
@@ -48,17 +48,16 @@
                 android:textStyle="bold"
                 android:textSize="20sp"
                 android:layout_gravity="bottom"
-                android:background="#55010613"
-                />
+                android:background="#55010613" />
         </FrameLayout>
 
         <!-- Contains asteroid list -->
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/asteroids_recyclerview"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            tools:listitem="@layout/asteroid_list_item"
             app:asteroidList="@{viewModel.asteroids}"
+            tools:listitem="@layout/asteroid_list_item"
 
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             android:layout_width="0dp"
             android:layout_height="0dp"
 
@@ -68,11 +67,11 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/activity_main_image_of_the_day_layout"
 
-            app:layout_constraintVertical_bias="0.0"
-            />
+            app:layout_constraintVertical_bias="0.0" />
 
         <ProgressBar
             android:id="@+id/status_loading_wheel"
+
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:indeterminate="true"

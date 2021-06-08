@@ -1,11 +1,14 @@
 package com.udacity.asteroidradar.main
 
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.udacity.asteroidradar.Asteroid
+import com.udacity.asteroidradar.DateUtils.Companion.toYearMonthsDays
+import com.udacity.asteroidradar.R
 import com.udacity.asteroidradar.databinding.AsteroidListItemBinding
 import timber.log.Timber
 
@@ -14,7 +17,7 @@ import timber.log.Timber
  * Adapter for AsteroidList RecyclerView
  * Adapter with ViewHolder and Diff
  */
-class AsteroidListAdapter(val onClickListener: OnClickListener) :
+class AsteroidListAdapter(val onClickListener: OnClickListener, val context: Context?) :
     ListAdapter<Asteroid, AsteroidListAdapter.AsteroidListViewHolder>(DiffCallback) {
 
     /** Contains functionality to check whether chapters are same or have same content.  */
@@ -90,11 +93,25 @@ class AsteroidListAdapter(val onClickListener: OnClickListener) :
      * will have the updated adapter position.
      * (Replaces the contents of a view (invoked by the layout manager))
      */
-    override fun onBindViewHolder(holder: AsteroidListViewHolder,
-                                  position: Int) {
+    override fun onBindViewHolder(
+        holder: AsteroidListViewHolder,
+        position: Int
+    ) {
         Timber.i("onBindViewHolder")
-        holder.bind(onClickListener, getItem(position))
+        val asteroid = getItem(position)
+        holder.bind(onClickListener, asteroid)
+        holder.itemView.contentDescription =
+            "${getTextualHasardousnessRating(asteroid.isPotentiallyHazardous)} " +
+                    "Asteroid with codename ${asteroid.codename}. " +
+                    "Close approach date is ${asteroid.closeApproachDate.toYearMonthsDays()}."
     }
+
+    private fun getTextualHasardousnessRating(isPotentiallyHazardous: Boolean) =
+        if (isPotentiallyHazardous) {
+            context?.getString(R.string.HazardousText) ?: "hazardous"
+        } else {
+            context?.getString(R.string.SafeText) ?: "safe"
+        }
 
     /**
      * Custom listener that handles clicks on [RecyclerView] items.  Passes the [Asteroid]

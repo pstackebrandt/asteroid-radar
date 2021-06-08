@@ -6,7 +6,6 @@
     android:id="@+id/layout">
 
     <!--  List item for asteroids list.  -->
-
     <data>
         <!-- Data of current asteroid -->
         <variable
@@ -26,8 +25,8 @@
 
         <TextView
             android:id="@+id/codename_textview"
-            android:text="@{asteroid.codename}"
             tools:text="(2016 BA39)"
+            android:text="@{asteroid.codename}"
 
             android:layout_width="0dp"
             android:layout_height="0dp"
@@ -44,8 +43,8 @@
 
         <TextView
             android:id="@+id/close_approach_date_textview"
-            dateWithoutTime="@{asteroid.closeApproachDate}"
             tools:text="2020-02-08"
+            dateWithoutTime="@{asteroid.closeApproachDate}"
 
             android:layout_width="0dp"
             android:layout_height="0dp"
@@ -62,9 +61,6 @@
 
             android:background="@android:color/holo_blue_dark"
             android:textColor="@android:color/white" />
-        <!-- todo print date without time -->
-
-        <!--        android:textAppearance="?textAppearanceHeadline6"-->
 
         <ImageView
             android:id="@+id/asteroid_safety_imageview"

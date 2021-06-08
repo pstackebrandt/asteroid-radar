@@ -67,10 +67,11 @@ class MainFragment : Fragment() {
                 Timber.i("asteroid clicked: ${asteroid.codename}")
                 // start navigation to detail screen
                 viewModel.displayAsteroidDetails(asteroid)
-            })
+            }, context?.applicationContext
+        )
             .apply {
-            asteroidListAdapter = this
-        }
+                asteroidListAdapter = this
+            }
 
         /**
          * Navigate to detail screen.

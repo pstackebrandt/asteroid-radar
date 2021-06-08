@@ -10,6 +10,7 @@
     <string name="relative_velocity_title">Relative velocity</string>
     <string name="distance_from_earth_title">Distance from earth</string>
     <string name="astronomical_unit_format">%f au</string>
+    <string name="astronomical_unit_format_unabbreviated_plural">%f astronomical units</string>
     <string name="km_unit_format">%f km</string>
     <string name="km_s_unit_format">%f km/s</string>
     <string name="image_of_the_day">Image of the Day</string>
@@ -17,11 +18,15 @@
     <string name="astronomical_unit_explanation_button">Astronomical unit definition</string>
     <string name="potentially_hazardous_asteroid_image">Potentially hazardous asteroid image</string>
     <string name="not_hazardous_asteroid_image">Not hazardous asteroid image</string>
-    <string name="this_is_nasa_s_picture_of_day_showing_nothing_yet">This is NASA\'s picture of day, showing nothing yet</string>
+    <string name="this_is_nasa_s_picture_of_day_showing_nothing_yet">This is NASA\'s image of the day, showing nothing yet</string>
     <string name="nasa_picture_of_day_content_description_format">NASA\'s picture of day: %s</string>
-    <string name="icon_asteroid_safety_description">icon reflecting hazardousness of asteroid</string>
+    <string name="icon_asteroid_safety_description">A smiley icon reflects the hazardousness of this asteroid. It looks friendly or angry.</string>
     <string name="image_of_the_day_view_description">NASA\'s image of the day</string>
-    <string name="activity_main_image_of_the_day__content_description">Image shows whether asteroid is potentially hazardous. It\'s a funny picture.</string>
-    <string name="help_button__content_description">Button for help info</string>
+    <string name="activity_main_image_of_the_day__content_description">Shows whether this asteroid is potentially hazardous. An asteroid with a face looks friendly or angry.</string>
+    <string name="astronomicalUnit_help_button_content_description">Astronomical unit help info</string>
     <string name="title_of_daily_picture__content_description">Title of image of the day</string>
+    <string name="HazardousText">hazardous</string>
+    <string name="SafeText">safe</string>
+    <string name="asteroidStatusImage_asteroidHazardous_contentDescription">Asteroid is potentially hazardous</string>
+    <string name="asteroidStatusImage_asteroidSafe_contentDescription">Asteroid is safe.</string>
 </resources>
