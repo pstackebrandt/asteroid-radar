@@ -56,12 +56,22 @@ class MainViewModel(application: Application) : ViewModel() {
             it.asDomainModel()
         }
 
-    var dailyPictureData: LiveData<DailyPicture> =
-        Transformations.map(
+    var dailyPictureData: LiveData<DailyPicture?> = getDailyPicture()
+
+    /**
+     * Get daily picture.
+     *
+     * If we don't have a daily picture in data base and have no internet connection,
+     * we get DatabaseDailyPicture null. So we changed to 'DailyPicture?'.
+     */
+    private fun getDailyPicture(): LiveData<DailyPicture?> {
+        val map = Transformations.map(
             database.dailyPictureDao.getLastDailyPictureWithImage(DateUtils.getDateWithoutTime())
         ) {
-            it.asDomainModel()
+            it?.asDomainModel()
         }
+        return map
+    }
 
     init {
         refreshAsteroids()
