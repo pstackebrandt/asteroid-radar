@@ -12,7 +12,6 @@ import com.udacity.asteroidradar.R
 import com.udacity.asteroidradar.databinding.AsteroidListItemBinding
 import timber.log.Timber
 
-
 /**
  * Adapter for AsteroidList RecyclerView
  * Adapter with ViewHolder and Diff

@@ -11,6 +11,7 @@ import timber.log.Timber
 import java.util.concurrent.TimeUnit
 
 /** gets called by system */
+@Suppress("unused")
 class AsteroidRadarApplication : Application() {
     private val applicationScope = CoroutineScope(Dispatchers.Default)
 

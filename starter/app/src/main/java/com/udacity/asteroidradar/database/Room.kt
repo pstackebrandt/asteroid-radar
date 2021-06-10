@@ -13,25 +13,21 @@ private lateinit var INSTANCE: AsteroidsDatabase
  */
 @Dao
 interface AsteroidDao {
-    /** get all asteroids from database */
-
+    /** Get all asteroids from database */
     @Query("select * from DatabaseAsteroid ORDER BY closeApproachDate DESC")
     fun getAllAsteroids(): LiveData<List<DatabaseAsteroid>>
 
-//    @Query("select * from DatabaseAsteroid WHERE closeApproachDate == :targetDate ")
-//    fun getAsteroids(targetDate: Date): LiveData<List<DatabaseAsteroid>>
-
     /**
+     * We don't snip the dates to day without time.
      * startDate should be without time of day to get all asteroids of day!
-     * time of endDate is not required currently.
+     * Time of endDate should have time short before end of day if data of full day is required.
      */
     @Query(
         "select * from DatabaseAsteroid WHERE closeApproachDate >= :startDate AND closeApproachDate <= :endDate ORDER BY closeApproachDate DESC"
     )
     fun getAsteroidsWithinTimeSpan(startDate: Date, endDate: Date): LiveData<List<DatabaseAsteroid>>
 
-    /** Insert asteroids into database. Replace asteroids,
-     * that already exist. */
+    /** Insert asteroids into database. Replace asteroids that already exist.*/
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertAll(vararg asteroids: DatabaseAsteroid)
 }

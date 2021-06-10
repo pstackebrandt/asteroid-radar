@@ -4,7 +4,6 @@ import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
 import java.util.*
 
-
 /**
  * This data class defines an asteroid which includes the codename and it's hazardousness.
  *

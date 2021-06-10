@@ -72,19 +72,6 @@ interface AsteroidApiService {
     )
             : Any
 
-
-    // I need a JsonObject or something I can transform into a JsonObject.
-    // I tried those:
-    // : Response<String>  // Error message: "Expected a string but was BEGIN_OBJECT at path $ "
-    // : List<Asteroid>    // Error message: "Expected a string but was BEGIN_OBJECT at path $ "
-    // : Any // Works, but will be a LinkedHashTreeMap, I don't know how to transform it to JsonObject.
-    // : LinkedHashMap<String,Any> // Error
-    // : Response<JSONObject> //java.lang.IllegalArgumentException: Unable to create converter for class org.json.JSONObject for method AsteroidApiService.getAsteroids
-    // : LinkedHashTreeMap<*, *> //java.lang.IllegalArgumentException: Unable to create converter for com.google.gson.internal.LinkedHashTreeMap<?, ?>
-    //    for method AsteroidApiService.getAsteroids
-
-    // https://api.nasa.gov/neo/rest/v1/feed?start_date=2021-04-17&end_date=2021-04-18&api_key=6Q4cMVxnARH5Jlgx976YDc41iz860XEOthEXQtKR
-
     /**
      * A public Api object that exposes the lazy-initialized Retrofit service
      */
