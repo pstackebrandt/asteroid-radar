@@ -1,8 +1,8 @@
-# Project Title
-
-Asteroid Radar
+# Asteroid Radar
 
 ## Getting Started (by Peter)
+
+Android App, coded with Kotlin
 
 This app bases on a training project by Udacity/Google.
 I extended base code by Udacity heavily.
