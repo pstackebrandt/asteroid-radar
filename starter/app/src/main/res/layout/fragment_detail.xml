@@ -54,7 +54,7 @@
                         android:labelFor="@+id/close_approach_date"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:textColor="@color/default_text_color"
+                        style="@style/TextTitle"
                         android:focusable="false" />
 
                     <TextView
@@ -64,8 +64,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="4dp"
-                        android:textColor="@color/default_text_color"
-                        android:focusable="false" />
+                        android:focusable="false"
+                        style="@style/AsteroidValuesInDetailView" />
                 </LinearLayout>
 
                 <!-- Absolute magnitude -->
@@ -88,17 +88,17 @@
                             android:text="@string/absolute_magnitude_title"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:textColor="@color/default_text_color"
+                            style="@style/TextTitle"
                             android:focusable="false" />
 
                         <TextView
                             android:id="@+id/absolute_magnitude"
                             app:astronomicalUnitText="@{asteroid.absoluteMagnitude}"
+                            tools:text="25.126 au"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="4dp"
-                            android:textColor="@color/default_text_color"
-                            tools:text="25.126 au"
+                            style="@style/AsteroidValuesInDetailView"
                             android:focusable="false" />
                     </LinearLayout>
 
@@ -127,7 +127,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="16dp"
                         android:labelFor="@+id/estimated_diameter"
-                        android:textColor="@color/default_text_color"
+                        style="@style/TextTitle"
                         android:focusable="false" />
 
                     <TextView
@@ -137,7 +137,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="4dp"
-                        android:textColor="@color/default_text_color"
+                        style="@style/AsteroidValuesInDetailView"
                         android:focusable="false" />
                 </LinearLayout>
 
@@ -154,7 +154,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="16dp"
                         android:labelFor="@+id/relative_velocity"
-                        android:textColor="@color/default_text_color"
+                        style="@style/TextTitle"
                         android:focusable="false" />
 
                     <TextView
@@ -164,7 +164,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="4dp"
-                        android:textColor="@color/default_text_color"
+                        style="@style/AsteroidValuesInDetailView"
                         android:focusable="false" />
                 </LinearLayout>
 
@@ -181,7 +181,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="16dp"
-                        android:textColor="@color/default_text_color"
+                        style="@style/TextTitle"
                         android:focusable="false" />
 
                     <TextView
@@ -191,7 +191,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="4dp"
-                        android:textColor="@color/default_text_color"
+                        style="@style/AsteroidValuesInDetailView"
                         android:focusable="false" />
                 </LinearLayout>
             </LinearLayout>

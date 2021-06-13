@@ -54,8 +54,8 @@
                         android:labelFor="@+id/close_approach_date"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:textColor="@color/default_text_color"
-                        android:screenReaderFocusable="false" />
+                        android:screenReaderFocusable="false"
+                        style="@style/TextTitle" />
 
                     <TextView
                         android:id="@+id/close_approach_date"
@@ -89,7 +89,7 @@
                             android:labelFor="@+id/absolute_magnitude"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:textColor="@color/default_text_color"
+                            style="@style/TextTitle"
                             android:screenReaderFocusable="false" />
 
                         <TextView
@@ -127,7 +127,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="16dp"
                         android:labelFor="@+id/estimated_diameter"
-                        android:textColor="@color/default_text_color"
+                        style="@style/TextTitle"
                         android:screenReaderFocusable="false" />
 
                     <TextView
@@ -154,7 +154,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="16dp"
                         android:labelFor="@+id/relative_velocity"
-                        android:textColor="@color/default_text_color"
+                        style="@style/TextTitle"
                         android:focusable="false" />
 
                     <TextView
@@ -181,7 +181,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="16dp"
-                        android:textColor="@color/default_text_color"
+                        style="@style/TextTitle"
                         android:focusable="false" />
 
                     <TextView
