@@ -4,6 +4,7 @@ import android.app.Application
 import androidx.lifecycle.*
 import com.udacity.asteroidradar.Asteroid
 import com.udacity.asteroidradar.DateUtils
+import com.udacity.asteroidradar.DateUtils.Companion.getDateAndTimeBeforeOrAfterNow
 import com.udacity.asteroidradar.database.DatabaseAsteroid
 import com.udacity.asteroidradar.database.asDomainModel
 import com.udacity.asteroidradar.database.getDatabase
@@ -76,6 +77,7 @@ class MainViewModel(application: Application) : ViewModel() {
     init {
         refreshAsteroids()
         refreshDailyPicture()
+        deleteOldUnusedAsteroids()
     }
 
     /** Get data of daily image */
@@ -153,6 +155,22 @@ class MainViewModel(application: Application) : ViewModel() {
             }
         }
     }
+
+    private fun deleteOldUnusedAsteroids() {
+        viewModelScope.launch {
+            try {
+                Timber.i("deleteOldUnusedAsteroids(): before service call ")
+                val timeOneWeekBefore = getDateAndTimeBeforeOrAfterNow(-7)
+                Timber.i("deleteOldUnusedAsteroids(): date time: $timeOneWeekBefore")
+                asteroidsRepository.deleteAsteroidsBefore(timeOneWeekBefore)
+                Timber.i("deleteOldUnusedAsteroids(): after service call ")
+            } catch (e: Exception) {
+                Timber.i("deleteOldUnusedAsteroids(): exception ${e.message}")
+                Timber.i("deleteOldUnusedAsteroids(): exception ${e.stackTrace}")
+            }
+        }
+    }
+
 
     /**
      * When the asteroid entry is clicked, set the [_navigateToSelectedAsteroid] [MutableLiveData].

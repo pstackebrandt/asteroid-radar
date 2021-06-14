@@ -73,5 +73,19 @@ class AsteroidsRepository(private val database: AsteroidsDatabase) {
 
         Timber.i("refreshDailyPicture() after server call.")
     }
+
+    /**
+     * Delete all asteroids with date before [endDate]. Delete considers date and time given.
+     * todo add tests
+     */
+    suspend fun deleteAsteroidsBefore(endDate: Date) {
+        Timber.i("deleteAsteroidsBefore() before database call. endDate: $endDate")
+
+        withContext(Dispatchers.IO) {
+            val deletedElementsCount: Int = database.asteroidDao.deleteAllBefore(endDate)
+            Timber.i("deleteAsteroidsBefore() after server call. deleted elements: $deletedElementsCount")
+        }
+        Timber.i("deleteAsteroidsBefore() after server call.")
+    }
 }
 

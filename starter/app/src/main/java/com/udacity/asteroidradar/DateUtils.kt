@@ -77,5 +77,12 @@ class DateUtils {
             calendar[Calendar.MILLISECOND] = 0
             return calendar.time
         }
+
+        /**
+         * Get date with [offset]. [offset] = -1: yesterday, 0: today, 1: tomorrow.
+         * We return Date with current Time.
+         * */
+        fun getDateAndTimeBeforeOrAfterNow(offset: Int) =
+            Date(System.currentTimeMillis() + offset * 24 * 60 * 60 * 1000)
     }
 }

@@ -1,15 +1,12 @@
 package com.udacity.asteroidradar.api
 
 import android.net.ParseException
-import android.os.Build
 import com.udacity.asteroidradar.Asteroid
-import com.udacity.asteroidradar.Constants
 import com.udacity.asteroidradar.DateUtils
 import com.udacity.asteroidradar.domain.DailyPicture
 import timber.log.Timber
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.collections.ArrayList
 
 /**
  * Parse asteroids from Map. [asteroidsFullData] is a strange object created by Moshi from
