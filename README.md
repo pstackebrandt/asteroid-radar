@@ -1,35 +1,41 @@
 # Asteroid Radar
 
-## Getting Started (by Peter)
+## Overview
 
 Android App, coded with Kotlin
 
 This app bases on a training project by Udacity/Google.
-I extended base code by Udacity heavily.
-I added this functionality:
+I extended the base code by Udacity heavily.
 
-Load asteroids data from NASA server
-- at app run 
-- periodically once a day
-Parse data prepared by Moshi
-Add room database
-Save data to database
-Show always data fetched from database
-Show asteroid data in recycler view by LiveData and observers
-Use binding adapters to prepare view data
-Start asteroid filters by use of overflow menu
-Use view model and repository
-App works offline
-- shows in this case data from database and cached pictures
-Opitimize screens for TalkBack
-Navigate from overview to detail view by use of use Navigation component
+### Main features (implemented by Peter)
+- Load asteroids data from NASA server
+    - Preload data once a day if device is idle
+    - Delete old NASA pictures of the day. Last image shouldn't be deleted.
+- Load Nasa picture of the day
+- App works offline
+    - Hold data in database
+- Filter asteroids
+    - Start asteroid filters by use of overflow menu
+- Show asteroid data in recycler view by LiveData and observers
+- Opitimize screens for TalkBack
 
-Usefull functionality NOT implemented:
-- If the app runs initially and has no internet connection the database is empty and has no cached pictures. In this case app looks empty and should remark lack of internet. App should refresh automatically more often or has a button for refresh.
-- Delete old NASA pictures of the day. Last image shouldn't be deleted.
-- Optimize UI
+### More features (implemented by Peter)
+- Show asteroids as list and in detail view
+- Navigate from overview to detail view by use of Navigation component
+- Parse data prepared by Moshi
+- Use view model and repository
+- Show always data fetched from database
+- Use binding adapters to prepare view data
+- Optimize UI (Theme, Styles)
 
-## Getting Started (by udacity)
+### Usefull functionality NOT yet implemented:
+- If the app runs initially and has no internet connection the database is empty and has no cached pictures. 
+    - In this case app looks empty and should remark lack of internet. 
+    - App should refresh automatically more often or has a button for refresh.
+    - Picture of the day could use local data.
+- Support second language
+
+## Getting Started (by Udacity)
 
 Asteroid Radar is an app to view the asteroids detected by NASA that pass near Earth, you can view all the detected asteroids in a period of time, their data (Size, velocity, distance to Earth) and if they are potentially hazardous.
 
@@ -37,27 +43,27 @@ The app consists of two screens: A Main screen with a list of all the detected a
 
 This kind of app is one of the most usual in the real world, what you will learn by doing this are some of the most fundamental skills you need to know to work as a professional Android developer, as fetching data from the internet, saving data to a database, and display the data in a clear, clear, compelling UI.
 
-### Screenshots (by udacity)
+### Screenshots (by Udacity)
 
 ![Screenshot 1](starter/screenshots/screen_1.png)
-![Screenshot 2](starter/screenshots/screen_2.png)
-![Screenshot 3](starter/screenshots/screen_3.png)
-![Screenshot 4](starter/screenshots/screen_4.png)
 
-### Dependencies
+![Screenshot 2](starter/screenshots/screen_2.png)
+
+![Screenshot 3](starter/screenshots/screen_3.png)
+
+![Screenshot 4](starter/screenshots/screen_4.png)
 
 ### Installation
 
 To get the project running on your local machine, you need to follow these steps:
 
-**Step 1: Clone the repo**
+**Step 1: Clone the repository **
 
 **Step 2: Check out the ‘master’ branch**
 
-**Step 2: (currently not needed) Add your own api key**
-- The app requires an API key by nasa. I don't check my own key into the public repository
-- Get your own API Key for the NASA NeoWS (Near Earth Object Web Service) API, which you can find at https://api.nasa.gov/ .
-- Add your API Key to SecureConstants.kt
+**Step 3: Run in Android studio**
+
+
 
 ## Project Instructions for the starter code (by udacity)
 
