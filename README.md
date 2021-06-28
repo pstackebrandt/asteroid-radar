@@ -35,6 +35,17 @@ I extended the base code by Udacity heavily.
     - Picture of the day could use local data.
 - Support second language
 
+## Installation
+
+To get the project running on your local machine, you need to follow these steps:
+
+**Step 1: Clone the repository **
+
+**Step 2: Check out the ‘master’ branch**
+
+**Step 3: Open in Android studio **
+    The project is in folder "asteroid-radar/radar/" !
+
 ## Getting Started (by Udacity)
 
 Asteroid Radar is an app to view the asteroids detected by NASA that pass near Earth, you can view all the detected asteroids in a period of time, their data (Size, velocity, distance to Earth) and if they are potentially hazardous.
@@ -52,17 +63,6 @@ This kind of app is one of the most usual in the real world, what you will learn
 ![Screenshot 3](starter/screenshots/screen_3.png)
 
 ![Screenshot 4](starter/screenshots/screen_4.png)
-
-### Installation
-
-To get the project running on your local machine, you need to follow these steps:
-
-**Step 1: Clone the repository **
-
-**Step 2: Check out the ‘master’ branch**
-
-**Step 3: Run in Android studio**
-
 
 
 ## Project Instructions for the starter code (by udacity)
